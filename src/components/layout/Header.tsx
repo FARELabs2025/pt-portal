@@ -7,16 +7,16 @@ import { ShoppingCart, Bell } from "lucide-react";
 export default function Header() {
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-white shadow-sm border-b border-gray-200">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="  px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Logo Section */}
           <div className="flex items-center">
             <Image
-              src="/logo1.png"
+              src="/images/logo1.png"
               alt="FARELABS Logo"
               width={200}
               height={80}
-              className="h-12 w-auto"
+              className="h-14 w-auto"
               priority
             />
           </div>

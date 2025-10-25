@@ -1,0 +1,149 @@
+"use client";
+
+import * as React from "react";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { ChevronLeft, ChevronRight, Search } from "lucide-react";
+
+interface Column {
+  key: string;
+  label: string;
+  render?: (value: any, row: any) => React.ReactNode;
+}
+
+interface DataTableProps {
+  columns: Column[];
+  data: any[];
+  searchable?: boolean;
+  pagination?: boolean;
+  searchPlaceholder?: string;
+  itemsPerPage?: number;
+  className?: string;
+}
+
+export function DataTable({
+  columns = [],
+  data = [],
+  searchable = true,
+  pagination = true,
+  searchPlaceholder = "Search...",
+  itemsPerPage = 10,
+  className = "",
+}: DataTableProps) {
+  const [searchTerm, setSearchTerm] = React.useState("");
+  const [currentPage, setCurrentPage] = React.useState(1);
+
+  // Filter data based on search term
+  const filteredData = React.useMemo(() => {
+    if (!searchable || !searchTerm) return data;
+    
+    return data.filter((row) =>
+      columns.some((column) => {
+        const value = row[column.key];
+        return value?.toString().toLowerCase().includes(searchTerm.toLowerCase());
+      })
+    );
+  }, [data, searchTerm, columns, searchable]);
+
+  // Paginate data
+  const paginatedData = React.useMemo(() => {
+    if (!pagination) return filteredData;
+    
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage;
+    return filteredData.slice(startIndex, endIndex);
+  }, [filteredData, currentPage, itemsPerPage, pagination]);
+
+  const totalPages = Math.ceil(filteredData.length / itemsPerPage);
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+  };
+
+  return (
+    <div className={`flex flex-col ${className}`}>
+      {/* Search Bar */}
+      {searchable && (
+        <div className="flex items-center space-x-2 mb-4">
+          <div className="relative flex-1 max-w-sm">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+            <Input
+              placeholder={searchPlaceholder}
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="pl-10"
+            />
+          </div>
+        </div>
+      )}
+
+      {/* Table Container */}
+      <div className="flex-1 border border-gray-200 rounded-lg overflow-hidden">
+        <table className="w-full">
+          <thead className="bg-[#D9D9D9]">
+            <tr>
+              {columns.map((column) => (
+                <th
+                  key={column.key}
+                  className="px-6 py-3 text-left text-xs font-bold text-gray-800 uppercase tracking-wider"
+                >
+                  {column.label}
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody className="bg-white divide-y divide-gray-200">
+            {paginatedData.map((row, index) => (
+              <tr key={index} className="hover:bg-gray-50">
+                {columns.map((column) => (
+                  <td key={column.key} className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                    {column.render ? column.render(row[column.key] || '', row) : (row[column.key] || '')}
+                  </td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
+      {/* Pagination - Always at bottom */}
+      {pagination && totalPages > 1 && (
+        <div className="flex items-center justify-center space-x-2 mt-4">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => handlePageChange(currentPage - 1)}
+            disabled={currentPage === 1}
+          >
+            <ChevronLeft className="h-4 w-4" />
+          </Button>
+          
+          {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+            <Button
+              key={page}
+              variant={currentPage === page ? "default" : "outline"}
+              size="sm"
+              onClick={() => handlePageChange(page)}
+              className={
+                currentPage === page 
+                  ? "bg-[#002A80] text-white hover:bg-[#002A80]/90" 
+                  : "border-gray-300 text-gray-700 hover:bg-gray-50"
+              }
+            >
+              {page}
+            </Button>
+          ))}
+          
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => handlePageChange(currentPage + 1)}
+            disabled={currentPage === totalPages}
+          >
+            <ChevronRight className="h-4 w-4" />
+          </Button>
+        </div>
+      )}
+    </div>
+  );
+}

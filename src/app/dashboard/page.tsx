@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
+import { useRouter } from "next/navigation";
 import { 
   Search, 
   Package, 
@@ -17,13 +18,22 @@ import {
 } from "lucide-react";
 
 export default function Dashboard() {
+  const router = useRouter();
+
+  const handleYourOrdersClick = () => {
+    router.push("/your-orders");
+  };
+
   return (
-    <div className="min-h-screen bg-white">
+    <div className="h-full bg-white flex flex-col overflow-hidden">
       {/* Header Section */}
-      <div className="bg-white border-b border-gray-200 px-6 py-4">
+      <div className="bg-white px-6 py-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-6">
-            <h1 className="text-3xl font-bold text-gray-800">Welcome MT-0121</h1>
+            <h1 className="text-3xl font-bold">
+              <span className="text-gray-800">Welcome </span>
+              <span className="text-[#002A80]">MT-0121</span>
+            </h1>
           </div>
           <div className="flex items-center space-x-4">
             <div className="relative">
@@ -41,15 +51,15 @@ export default function Dashboard() {
       </div>
 
       {/* Main Content */}
-      <div className="p-6">
+      <div className="flex-1 p-6 overflow-hidden">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
           {/* Left Column - Cards */}
           <div className="lg:col-span-8">
-            <div className="space-y-6">
+            <div className="space-y-6 h-full overflow-y-auto">
               {/* First Row - 3 Cards */}
               <div className="grid grid-cols-3 gap-6">
                 {/* Your Orders Card */}
-                <Card className="bg-[#E6EEFF] border-0 shadow-sm">
+                <Card className="bg-[#E6EEFF] border-0 shadow-sm cursor-pointer hover:shadow-md transition-shadow" onClick={handleYourOrdersClick}>
                   <CardContent className="p-6">
                     <div className="flex flex-col items-center text-center space-y-4">
                       <div className="w-16 h-16 bg-[#002A80] rounded-full flex items-center justify-center">
@@ -110,7 +120,7 @@ export default function Dashboard() {
                             <span>PT Calender National</span>
                             <Download className="h-4 w-4" />
                           </Button>
-                          <Button className="w-full bg-[#002A80] hover:bg-[#002A80]/90 text-white flex items-center justify-center space-x-2">
+                          <Button className="w-full bg-[white]  text-[#002A80] flex items-center justify-center space-x-2">
                             <span>PT Calender International</span>
                             <Download className="h-4 w-4" />
                           </Button>
@@ -134,11 +144,11 @@ export default function Dashboard() {
                         </Button>
                       </div>
                       <div className="w-1/2 flex justify-center items-center">
-                        <img
-                          src="/survey.png"
-                          alt="Survey Illustration"
-                          className="w-full h-auto max-w-[200px] object-contain"
-                        />
+                    <img
+                      src="/images/survey.png"
+                      alt="Survey Illustration"
+                      className="w-full h-auto max-w-[200px] object-contain"
+                    />
                       </div>
                     </div>
                   </CardContent>
@@ -149,9 +159,9 @@ export default function Dashboard() {
 
           {/* Right Column - PT Table */}
           <div className="lg:col-span-4">
-            <div className="space-y-4 h-full">
-              <Card className="bg-[#E6EEFF] border-0 shadow-sm h-[580px] flex flex-col">
-                <div className="p-4 pb-1">
+            <div className="h-full">
+              <Card className="bg-[#E6EEFF] border-0 shadow-sm h-full flex flex-col">
+                <div className="px-4 pb-1">
                   <h2 className="text-2xl font-bold text-gray-800">Ongoing/Upcoming PT</h2>
                 </div>
                 <div className="flex-1 overflow-hidden">

@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Phone } from "lucide-react";
+import Image from "next/image";
 
 export default function Footer() {
   return (
@@ -45,14 +46,15 @@ export default function Footer() {
             <div className="bg-white rounded-lg p-6 shadow-lg border border-amber-200 max-w-sm w-full">
               <h3 className="text-xl font-bold text-black mb-4">Call Us Now!</h3>
               
-              {/* Illustration placeholder - you can replace with actual image */}
-              <div className="w-full h-32 bg-linear-to-r from-blue-100 to-orange-100 rounded-lg mb-4 flex items-center justify-center">
-                <div className="text-center">
-                  <div className="w-16 h-16 bg-blue-500 rounded-full mx-auto mb-2 flex items-center justify-center">
-                    <Phone className="h-8 w-8 text-white" />
-                  </div>
-                  <p className="text-xs text-gray-600">Support Team</p>
-                </div>
+              {/* Support Team Image */}
+              <div className="w-full h-32 rounded-lg mb-4 flex items-center justify-center overflow-hidden">
+                <Image
+                  src="/images/Group.png"
+                  alt="Support Team"
+                  width={200}
+                  height={128}
+                  className="w-full h-full object-contain"
+                />
               </div>
 
               <h4 className="text-lg font-bold text-black mb-2">Call Now & get in touch with our team</h4>
