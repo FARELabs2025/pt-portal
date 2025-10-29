@@ -4,8 +4,10 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { DataTable } from "@/components/ui/data-table";
 import { Search } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 export default function YourOrders() {
+  const router = useRouter();
   // Extended dummy data for pagination testing
   const ordersData = [
     {
@@ -271,7 +273,12 @@ export default function YourOrders() {
         
         <div className="mb-2">
           <nav className="text-sm">
-            <span className="text-gray-600">MY ACCOUNT</span>
+            <span 
+              className="text-gray-600 cursor-pointer hover:text-[#002A80]"
+              onClick={() => router.push("/dashboard")}
+            >
+              MY ACCOUNT
+            </span>
             <span className="mx-2 text-gray-400">&gt;</span>
             <span className="text-[#002A80] cursor-pointer font-semibold">ORDERS</span>
           </nav>
@@ -284,7 +291,7 @@ export default function YourOrders() {
             data={ordersData}
             searchable={false}
             pagination={true}
-            itemsPerPage={8}
+            itemsPerPage={7}
           />
         </div>
       </div>
