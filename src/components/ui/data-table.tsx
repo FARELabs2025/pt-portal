@@ -8,7 +8,7 @@ import { ChevronLeft, ChevronRight, Search } from "lucide-react";
 interface Column {
   key: string;
   label: string;
-  render?: (value: any, row: any) => React.ReactNode;
+  render?: (value: any, row: any, localIndex?: number, actualIndex?: number) => React.ReactNode;
 }
 
 interface DataTableProps {
@@ -93,15 +93,19 @@ export function DataTable({
             </tr>
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">
-            {paginatedData.map((row, index) => (
-              <tr key={index} className="hover:bg-gray-50">
-                {columns.map((column) => (
-                  <td key={column.key} className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                    {column.render ? column.render(row[column.key] || '', row) : (row[column.key] || '')}
-                  </td>
-                ))}
-              </tr>
-            ))}
+            {paginatedData.map((row, index) => {
+              const actualIndex = pagination ? (currentPage - 1) * itemsPerPage + index : index;
+              const localIndex = index;
+              return (
+                <tr key={index} className="hover:bg-gray-50">
+                  {columns.map((column) => (
+                    <td key={column.key} className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                      {column.render ? column.render(row[column.key] || '', row, localIndex, actualIndex) : (row[column.key] || '')}
+                    </td>
+                  ))}
+                </tr>
+              );
+            })}
           </tbody>
         </table>
       </div>
@@ -114,6 +118,7 @@ export function DataTable({
             size="sm"
             onClick={() => handlePageChange(currentPage - 1)}
             disabled={currentPage === 1}
+            className="cursor-pointer"
           >
             <ChevronLeft className="h-4 w-4" />
           </Button>
@@ -126,8 +131,8 @@ export function DataTable({
               onClick={() => handlePageChange(page)}
               className={
                 currentPage === page 
-                  ? "bg-[#002A80] text-white hover:bg-[#002A80]/90" 
-                  : "border-gray-300 text-gray-700 hover:bg-gray-50"
+                  ? "bg-[#002A80] text-white hover:bg-[#002A80]/90 cursor-pointer" 
+                  : "border-gray-300 text-gray-700 hover:bg-gray-50 cursor-pointer"
               }
             >
               {page}
@@ -139,6 +144,7 @@ export function DataTable({
             size="sm"
             onClick={() => handlePageChange(currentPage + 1)}
             disabled={currentPage === totalPages}
+            className="cursor-pointer"
           >
             <ChevronRight className="h-4 w-4" />
           </Button>
