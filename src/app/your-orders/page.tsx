@@ -224,12 +224,12 @@ export default function YourOrders() {
     {
       key: "trackOrder",
       label: "Track Order",
-      render: (value: any, row: any) => (
+      render: (_value: unknown, row: unknown) => (
         <Button
-          variant={row.orderStatus === "Completed" ? "default" : "outline"}
+          variant={String((row as Record<string, unknown>).orderStatus) === "Completed" ? "default" : "outline"}
           size="sm"
           className={
-            row.orderStatus === "Completed"
+            String((row as Record<string, unknown>).orderStatus) === "Completed"
               ? "bg-[#002A80] text-white hover:bg-[#002A80]/90"
               : "border-[#002A80] text-[#002A80] hover:bg-[#002A80] hover:text-white"
           }
