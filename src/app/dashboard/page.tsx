@@ -32,6 +32,10 @@ export default function Dashboard() {
     router.push("/dashboard/certificate");
   };
 
+  const handleSurveyClick = () => {
+    router.push("/dashboard/survey");
+  };
+
   return (
     <div className="h-full bg-white flex flex-col overflow-hidden">
       {/* Header Section */}
@@ -147,7 +151,10 @@ export default function Dashboard() {
                         <p className="text-sm text-gray-600 mb-4 leading-relaxed">
                           We value your feedback and strive to improve our services. Please take a moment to complete our survey to help us understand your needs and enhance your experience. Thank you for your time and support!
                         </p>
-                        <Button className="bg-[#002A80] hover:bg-[#002A80]/90 text-white">
+                        <Button 
+                          onClick={handleSurveyClick}
+                          className="bg-[#002A80] hover:bg-[#002A80]/90 text-white"
+                        >
                           Go to Survey
                         </Button>
                       </div>

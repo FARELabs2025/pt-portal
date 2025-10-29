@@ -109,11 +109,7 @@ export default function Certificate() {
         <Button
           size="sm"
           onClick={() => handleDownloadResult(row)}
-          className={
-            localIndex === 0
-              ? "bg-[white] text-[#002A80] hover:bg-[#002A80]/90 flex items-center gap-2 cursor-pointer"
-              : "bg-white text-[#002A80] border border-[#002A80] hover:bg-[#002A80] hover:text-white flex items-center gap-2 cursor-pointer"
-          }
+          className="bg-white text-[#002A80] border border-[#002A80] hover:bg-[#002A80] hover:text-white flex items-center gap-2 cursor-pointer"
         >
           <FileText className="h-4 w-4" />
           Download Report
@@ -127,11 +123,7 @@ export default function Certificate() {
         <Button
           size="sm"
           onClick={() => handleDownloadCertificate(row)}
-          className={
-            localIndex === 0
-              ? "bg-[#002A80] text-white hover:bg-[#002A80]/90 flex items-center gap-2 cursor-pointer"
-              : "bg-white text-[#002A80] border border-[#002A80] hover:bg-[#002A80] hover:text-white flex items-center gap-2 cursor-pointer"
-          }
+          className="bg-white text-[#002A80] border border-[#002A80] hover:bg-[#002A80] hover:text-white flex items-center gap-2 cursor-pointer"
         >
           <FileText className="h-4 w-4" />
           Download Certificate
@@ -189,6 +181,15 @@ export default function Certificate() {
             searchable={false}
             pagination={true}
             itemsPerPage={7}
+            backButton={
+              <Button
+                onClick={() => router.push("/dashboard")}
+                variant="outline"
+                className="border-[#002A80] text-[#002A80] hover:bg-[#002A80] hover:text-white"
+              >
+                Back to Dashboard
+              </Button>
+            }
           />
         </div>
       </div>
