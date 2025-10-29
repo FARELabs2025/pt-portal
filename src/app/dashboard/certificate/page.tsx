@@ -127,12 +127,8 @@ export default function Certificate() {
       render: (_value: unknown, row: Record<string, unknown>, localIndex?: number) => (
         <Button
           size="sm"
-          onClick={() => handleDownloadResult(row as unknown as CertificateRow)}
-          className={
-            localIndex === 0
-              ? "bg-[white] text-[#002A80] hover:bg-[#002A80]/90 flex items-center gap-2 cursor-pointer"
-              : "bg-white text-[#002A80] border border-[#002A80] hover:bg-[#002A80] hover:text-white flex items-center gap-2 cursor-pointer"
-          }
+          onClick={() => handleDownloadResult(row)}
+          className="bg-white text-[#002A80] border border-[#002A80] hover:bg-[#002A80] hover:text-white flex items-center gap-2 cursor-pointer"
         >
           <FileText className="h-4 w-4" />
           Download Report
@@ -145,12 +141,8 @@ export default function Certificate() {
       render: (_value: unknown, row: Record<string, unknown>, localIndex?: number) => (
         <Button
           size="sm"
-          onClick={() => handleDownloadCertificate(row as unknown as CertificateRow)}
-          className={
-            localIndex === 0
-              ? "bg-[#002A80] text-white hover:bg-[#002A80]/90 flex items-center gap-2 cursor-pointer"
-              : "bg-white text-[#002A80] border border-[#002A80] hover:bg-[#002A80] hover:text-white flex items-center gap-2 cursor-pointer"
-          }
+          onClick={() => handleDownloadCertificate(row)}
+          className="bg-white text-[#002A80] border border-[#002A80] hover:bg-[#002A80] hover:text-white flex items-center gap-2 cursor-pointer"
         >
           <FileText className="h-4 w-4" />
           Download Certificate
