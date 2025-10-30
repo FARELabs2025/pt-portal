@@ -21,7 +21,19 @@ export default function Dashboard() {
   const router = useRouter();
 
   const handleYourOrdersClick = () => {
-    router.push("/your-orders");
+    router.push("/dashboard/your-orders");
+  };
+
+  const handleResultSubmissionClick = () => {
+    router.push("/dashboard/result-submission");
+  };
+
+  const handleCertificateClick = () => {
+    router.push("/dashboard/certificate");
+  };
+
+  const handleSurveyClick = () => {
+    router.push("/dashboard/survey");
   };
 
   return (
@@ -74,7 +86,7 @@ export default function Dashboard() {
                 </Card>
 
                 {/* Result Submission Card */}
-                <Card className="bg-[#E6EEFF] border-0 shadow-sm">
+                <Card className="bg-[#E6EEFF] border-0 shadow-sm cursor-pointer hover:shadow-md transition-shadow" onClick={handleResultSubmissionClick}>
                   <CardContent className="p-6">
                     <div className="flex flex-col items-center text-center space-y-4">
                       <div className="w-16 h-16 bg-[#002A80] rounded-full flex items-center justify-center">
@@ -89,7 +101,7 @@ export default function Dashboard() {
                 </Card>
 
                 {/* PT Result / Certificate Card */}
-                <Card className="bg-[#E6EEFF] border-0 shadow-sm">
+                <Card className="bg-[#E6EEFF] border-0 shadow-sm cursor-pointer hover:shadow-md transition-shadow" onClick={handleCertificateClick}>
                   <CardContent className="p-6">
                     <div className="flex flex-col items-center text-center space-y-4">
                       <div className="w-16 h-16 bg-[#002A80] rounded-full flex items-center justify-center">
@@ -139,7 +151,10 @@ export default function Dashboard() {
                         <p className="text-sm text-gray-600 mb-4 leading-relaxed">
                           We value your feedback and strive to improve our services. Please take a moment to complete our survey to help us understand your needs and enhance your experience. Thank you for your time and support!
                         </p>
-                        <Button className="bg-[#002A80] hover:bg-[#002A80]/90 text-white">
+                        <Button 
+                          onClick={handleSurveyClick}
+                          className="bg-[#002A80] hover:bg-[#002A80]/90 text-white"
+                        >
                           Go to Survey
                         </Button>
                       </div>

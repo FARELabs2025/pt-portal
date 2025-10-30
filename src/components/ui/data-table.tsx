@@ -8,17 +8,18 @@ import { ChevronLeft, ChevronRight, Search } from "lucide-react";
 interface Column {
   key: string;
   label: string;
-  render?: (value: any, row: any) => React.ReactNode;
+  render?: (value: unknown, row: Record<string, unknown>, localIndex?: number, actualIndex?: number) => React.ReactNode;
 }
 
 interface DataTableProps {
   columns: Column[];
-  data: any[];
+  data: Record<string, unknown>[];
   searchable?: boolean;
   pagination?: boolean;
   searchPlaceholder?: string;
   itemsPerPage?: number;
   className?: string;
+  backButton?: React.ReactNode;
 }
 
 export function DataTable({
@@ -29,6 +30,7 @@ export function DataTable({
   searchPlaceholder = "Search...",
   itemsPerPage = 10,
   className = "",
+  backButton,
 }: DataTableProps) {
   const [searchTerm, setSearchTerm] = React.useState("");
   const [currentPage, setCurrentPage] = React.useState(1);
@@ -39,8 +41,8 @@ export function DataTable({
     
     return data.filter((row) =>
       columns.some((column) => {
-        const value = row[column.key];
-        return value?.toString().toLowerCase().includes(searchTerm.toLowerCase());
+        const value = (row as Record<string, unknown>)[column.key];
+        return String(value).toLowerCase().includes(searchTerm.toLowerCase());
       })
     );
   }, [data, searchTerm, columns, searchable]);
@@ -48,10 +50,10 @@ export function DataTable({
   // Paginate data
   const paginatedData = React.useMemo(() => {
     if (!pagination) return filteredData;
-    
+  
     const startIndex = (currentPage - 1) * itemsPerPage;
     const endIndex = startIndex + itemsPerPage;
-    return filteredData.slice(startIndex, endIndex);
+    return (filteredData as Record<string, unknown>[]).slice(startIndex, endIndex);
   }, [filteredData, currentPage, itemsPerPage, pagination]);
 
   const totalPages = Math.ceil(filteredData.length / itemsPerPage);
@@ -93,55 +95,76 @@ export function DataTable({
             </tr>
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">
-            {paginatedData.map((row, index) => (
-              <tr key={index} className="hover:bg-gray-50">
-                {columns.map((column) => (
-                  <td key={column.key} className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                    {column.render ? column.render(row[column.key] || '', row) : (row[column.key] || '')}
-                  </td>
-                ))}
-              </tr>
-            ))}
+            {paginatedData.map((row, index) => {
+              const actualIndex = pagination ? (currentPage - 1) * itemsPerPage + index : index;
+              const localIndex = index;
+              return (
+                <tr key={index} className="hover:bg-gray-50">
+                  {columns.map((column) => (
+                    <td key={String(column.key)} className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                      {column.render ? column.render((row as Record<string, unknown>)[column.key] ?? '', row as Record<string, unknown>, localIndex, actualIndex) : String((row as Record<string, unknown>)[column.key] ?? '')}
+                    </td>
+                  ))}
+                </tr>
+              );
+            })}
           </tbody>
         </table>
       </div>
 
-      {/* Pagination - Always at bottom */}
-      {pagination && totalPages > 1 && (
-        <div className="flex items-center justify-center space-x-2 mt-4">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => handlePageChange(currentPage - 1)}
-            disabled={currentPage === 1}
-          >
-            <ChevronLeft className="h-4 w-4" />
-          </Button>
+      {/* Pagination/Back Button - Always at bottom */}
+      {(pagination || backButton) && (
+        <div className="flex items-center justify-between mt-4 relative">
+          {/* Back Button on the left */}
+          <div className="shrink-0">
+            {backButton}
+          </div>
           
-          {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
-            <Button
-              key={page}
-              variant={currentPage === page ? "default" : "outline"}
-              size="sm"
-              onClick={() => handlePageChange(page)}
-              className={
-                currentPage === page 
-                  ? "bg-[#002A80] text-white hover:bg-[#002A80]/90" 
-                  : "border-gray-300 text-gray-700 hover:bg-gray-50"
-              }
-            >
-              {page}
-            </Button>
-          ))}
+          {/* Pagination in the center */}
+          <div className="flex-1 flex justify-center">
+            {pagination && totalPages > 1 && (
+              <div className="flex items-center space-x-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => handlePageChange(currentPage - 1)}
+                  disabled={currentPage === 1}
+                  className="cursor-pointer"
+                >
+                  <ChevronLeft className="h-4 w-4" />
+                </Button>
+                
+                {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+                  <Button
+                    key={page}
+                    variant={currentPage === page ? "default" : "outline"}
+                    size="sm"
+                    onClick={() => handlePageChange(page)}
+                    className={
+                      currentPage === page 
+                        ? "bg-[#002A80] text-white hover:bg-[#002A80]/90 cursor-pointer" 
+                        : "border-gray-300 text-gray-700 hover:bg-gray-50 cursor-pointer"
+                    }
+                  >
+                    {page}
+                  </Button>
+                ))}
+                
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => handlePageChange(currentPage + 1)}
+                  disabled={currentPage === totalPages}
+                  className="cursor-pointer"
+                >
+                  <ChevronRight className="h-4 w-4" />
+                </Button>
+              </div>
+            )}
+          </div>
           
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => handlePageChange(currentPage + 1)}
-            disabled={currentPage === totalPages}
-          >
-            <ChevronRight className="h-4 w-4" />
-          </Button>
+          {/* Empty div to balance the layout */}
+          <div className="shrink-0 w-[120px]"></div>
         </div>
       )}
     </div>
