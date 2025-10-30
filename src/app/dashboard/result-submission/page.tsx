@@ -10,8 +10,28 @@ import { useRouter } from "next/navigation";
 export default function ResultSubmission() {
   const router = useRouter();
 
+  interface SubmissionRow {
+    ptScheme: string;
+    ptItem: string;
+    labCode: string;
+    startDate: string;
+    endDate: string;
+    uploadResult: string;
+  }
+
+  interface Column {
+    key: string;
+    label: string;
+    render?: (
+      value: unknown,
+      row: Record<string, unknown>,
+      localIndex?: number,
+      actualIndex?: number
+    ) => React.ReactNode;
+  }
+
   // Sample data for result submission matching the design
-  const submissionsData = [
+  const submissionsData: SubmissionRow[] = [
     {
       ptScheme: "Cereals And Cereal Based Products (MOMB-2406)",
       ptItem: "Soya/ Corn/Maize/ Rice",
@@ -138,13 +158,13 @@ export default function ResultSubmission() {
     }
   };
 
-  const columns = [
+  const columns: Column[] = [
     {
       key: "ptScheme",
       label: "PT Scheme & Code",
-      render: (value: string) => (
+      render: (value: unknown) => (
         <span className="font-bold">
-          {value || ''}
+          {String(value ?? '')}
         </span>
       ),
     },
@@ -155,35 +175,35 @@ export default function ResultSubmission() {
     {
       key: "labCode",
       label: "Lab Code",
-      render: (value: string) => (
+      render: (value: unknown) => (
         <span className="font-bold">
-          {value || ''}
+          {String(value ?? '')}
         </span>
       ),
     },
     {
       key: "startDate",
       label: "Start Date",
-      render: (value: string) => (
+      render: (value: unknown) => (
         <span className="font-bold">
-          {value || ''}
+          {String(value ?? '')}
         </span>
       ),
     },
     {
       key: "endDate",
       label: "End Date",
-      render: (value: string) => (
+      render: (value: unknown) => (
         <span className="font-bold">
-          {value || ''}
+          {String(value ?? '')}
         </span>
       ),
     },
     {
       key: "uploadResult",
       label: "Upload Result",
-      render: (value: any, row: any, localIndex?: number, actualIndex?: number) => {
-        const rowIndex = actualIndex || 0;
+      render: (_value: unknown, _row: Record<string, unknown>, _localIndex?: number, actualIndex?: number) => {
+        const rowIndex = actualIndex ?? 0;
         return (
           <div className="flex items-center">
             <input
@@ -256,7 +276,7 @@ export default function ResultSubmission() {
         <div className="h-full overflow-hidden">
           <DataTable
             columns={columns}
-            data={submissionsData}
+            data={submissionsData as unknown as Record<string, unknown>[]}
             searchable={false}
             pagination={true}
             itemsPerPage={7}

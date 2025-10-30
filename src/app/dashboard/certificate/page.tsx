@@ -9,8 +9,27 @@ import { useRouter } from "next/navigation";
 export default function Certificate() {
   const router = useRouter();
 
+  interface CertificateRow {
+    ptScheme: string;
+    ptItem: string;
+    labCode: string;
+    downloadResult: string;
+    downloadCertificate: string;
+  }
+
+  interface Column {
+    key: string;
+    label: string;
+    render?: (
+      value: unknown,
+      row: Record<string, unknown>,
+      localIndex?: number,
+      actualIndex?: number
+    ) => React.ReactNode;
+  }
+
   // Sample data for result certificates matching the design
-  const certificatesData = [
+  const certificatesData: CertificateRow[] = [
     {
       ptScheme: "Cereals And Cereal Based Products (MOMB-2406)",
       ptItem: "Soya/ Corn/Maize/ Rice",
@@ -69,23 +88,23 @@ export default function Certificate() {
     },
   ];
 
-  const handleDownloadResult = (row: any) => {
+  const handleDownloadResult = (row: CertificateRow) => {
     // Handle download result logic here
     console.log("Downloading result for:", row.ptScheme);
   };
 
-  const handleDownloadCertificate = (row: any) => {
+  const handleDownloadCertificate = (row: CertificateRow) => {
     // Handle download certificate logic here
     console.log("Downloading certificate for:", row.ptScheme);
   };
 
-  const columns = [
+  const columns: Column[] = [
     {
       key: "ptScheme",
       label: "PT Scheme & Code",
-      render: (value: string) => (
+      render: (value: unknown) => (
         <span className="font-medium">
-          {value || ''}
+          {String(value ?? '')}
         </span>
       ),
     },
@@ -96,20 +115,24 @@ export default function Certificate() {
     {
       key: "labCode",
       label: "Lab Code",
-      render: (value: string) => (
+      render: (value: unknown) => (
         <span className="font-medium">
-          {value || ''}
+          {String(value ?? '')}
         </span>
       ),
     },
     {
       key: "downloadResult",
       label: "Download Result",
-      render: (value: any, row: any, localIndex?: number, actualIndex?: number) => (
+      render: (_value: unknown, row: Record<string, unknown>, localIndex?: number) => (
         <Button
           size="sm"
-          onClick={() => handleDownloadResult(row)}
-          className="bg-white text-[#002A80] border border-[#002A80] hover:bg-[#002A80] hover:text-white flex items-center gap-2 cursor-pointer"
+          onClick={() => handleDownloadResult(row as unknown as CertificateRow)}
+          className={
+            localIndex === 0
+              ? "bg-[white] text-[#002A80] hover:bg-[#002A80]/90 flex items-center gap-2 cursor-pointer"
+              : "bg-white text-[#002A80] border border-[#002A80] hover:bg-[#002A80] hover:text-white flex items-center gap-2 cursor-pointer"
+          }
         >
           <FileText className="h-4 w-4" />
           Download Report
@@ -119,11 +142,15 @@ export default function Certificate() {
     {
       key: "downloadCertificate",
       label: "Download Certificate",
-      render: (value: any, row: any, localIndex?: number, actualIndex?: number) => (
+      render: (_value: unknown, row: Record<string, unknown>, localIndex?: number) => (
         <Button
           size="sm"
-          onClick={() => handleDownloadCertificate(row)}
-          className="bg-white text-[#002A80] border border-[#002A80] hover:bg-[#002A80] hover:text-white flex items-center gap-2 cursor-pointer"
+          onClick={() => handleDownloadCertificate(row as unknown as CertificateRow)}
+          className={
+            localIndex === 0
+              ? "bg-[#002A80] text-white hover:bg-[#002A80]/90 flex items-center gap-2 cursor-pointer"
+              : "bg-white text-[#002A80] border border-[#002A80] hover:bg-[#002A80] hover:text-white flex items-center gap-2 cursor-pointer"
+          }
         >
           <FileText className="h-4 w-4" />
           Download Certificate
@@ -177,7 +204,7 @@ export default function Certificate() {
         <div className="h-full overflow-hidden">
           <DataTable
             columns={columns}
-            data={certificatesData}
+            data={certificatesData as unknown as Record<string, unknown>[]}
             searchable={false}
             pagination={true}
             itemsPerPage={7}
