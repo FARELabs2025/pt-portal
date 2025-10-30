@@ -54,7 +54,7 @@ export default function RegisterPage() {
   }, [isConfirmOpen]);
 
   return (
-    <section className="min-h-screen bg-white">
+    <section className="min-h-screen bg-white pt-16">
      
 
       {/* Main Content */}

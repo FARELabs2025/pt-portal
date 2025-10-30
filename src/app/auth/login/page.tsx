@@ -64,7 +64,7 @@ export default function FarelabsLogin() {
   };
 
   return (
-    <div className="h-screen w-full relative overflow-hidden flex flex-col">
+    <div className="min-h-screen w-full relative overflow-hidden flex flex-col pt-16">
       {/* Background Image with Overlay */}
       <div 
         className="absolute inset-0 bg-cover bg-center bg-no-repeat"

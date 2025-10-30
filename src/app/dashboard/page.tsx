@@ -190,7 +190,7 @@ export default function Dashboard() {
                       </TableRow>
                     </TableHeader>
                     <TableBody>
-                      <TableRow>
+                      <TableRow className="border-[#d9d9d9]">
                         <TableCell className="font-medium text-[10px]">
                           <div>Bakery & Confectionery Products-I</div>
                           <div className="text-gray-500">(FACH-2401)</div>
@@ -201,7 +201,7 @@ export default function Dashboard() {
                           <Badge className="bg-[#002A80] text-white hover:bg-[#002A80]">Ongoing</Badge>
                         </TableCell>
                       </TableRow>
-                      <TableRow>
+                      <TableRow className="border-[#d9d9d9]">
                         <TableCell className="font-medium text-[10px]">
                           <div>Dairy Products-II</div>
                           <div className="text-gray-500">(FACH-2402)</div>
@@ -212,7 +212,7 @@ export default function Dashboard() {
                           <Badge className="bg-orange-500 text-white hover:bg-orange-500">Upcoming</Badge>
                         </TableCell>
                       </TableRow>
-                      <TableRow>
+                      <TableRow className="border-[#d9d9d9]">
                         <TableCell className="font-medium text-[10px]">
                           <div>Spices & Condiments-III</div>
                           <div className="text-gray-500">(FACH-2403)</div>
@@ -223,7 +223,7 @@ export default function Dashboard() {
                           <Badge className="bg-orange-500 text-white hover:bg-orange-500">Upcoming</Badge>
                         </TableCell>
                       </TableRow>
-                      <TableRow>
+                      <TableRow className="border-[#d9d9d9]">
                         <TableCell className="font-medium text-[10px]">
                           <div>Cereals & Pulses-IV</div>
                           <div className="text-gray-500">(FACH-2404)</div>
