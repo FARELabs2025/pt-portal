@@ -8,12 +8,12 @@ import { ChevronLeft, ChevronRight, Search } from "lucide-react";
 interface Column {
   key: string;
   label: string;
-  render?: (value: any, row: any, localIndex?: number, actualIndex?: number) => React.ReactNode;
+  render?: (value: unknown, row: Record<string, unknown>, localIndex?: number, actualIndex?: number) => React.ReactNode;
 }
 
 interface DataTableProps {
   columns: Column[];
-  data: any[];
+  data: Record<string, unknown>[];
   searchable?: boolean;
   pagination?: boolean;
   searchPlaceholder?: string;
@@ -39,8 +39,8 @@ export function DataTable({
     
     return data.filter((row) =>
       columns.some((column) => {
-        const value = row[column.key];
-        return value?.toString().toLowerCase().includes(searchTerm.toLowerCase());
+        const value = (row as Record<string, unknown>)[column.key];
+        return String(value).toLowerCase().includes(searchTerm.toLowerCase());
       })
     );
   }, [data, searchTerm, columns, searchable]);
@@ -48,10 +48,10 @@ export function DataTable({
   // Paginate data
   const paginatedData = React.useMemo(() => {
     if (!pagination) return filteredData;
-    
+  
     const startIndex = (currentPage - 1) * itemsPerPage;
     const endIndex = startIndex + itemsPerPage;
-    return filteredData.slice(startIndex, endIndex);
+    return (filteredData as Record<string, unknown>[]).slice(startIndex, endIndex);
   }, [filteredData, currentPage, itemsPerPage, pagination]);
 
   const totalPages = Math.ceil(filteredData.length / itemsPerPage);
@@ -99,8 +99,8 @@ export function DataTable({
               return (
                 <tr key={index} className="hover:bg-gray-50">
                   {columns.map((column) => (
-                    <td key={column.key} className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                      {column.render ? column.render(row[column.key] || '', row, localIndex, actualIndex) : (row[column.key] || '')}
+                    <td key={String(column.key)} className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                      {column.render ? column.render((row as Record<string, unknown>)[column.key] ?? '', row as Record<string, unknown>, localIndex, actualIndex) : String((row as Record<string, unknown>)[column.key] ?? '')}
                     </td>
                   ))}
                 </tr>

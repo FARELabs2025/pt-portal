@@ -5,7 +5,7 @@ import Image from "next/image";
 // ShadCN UI Components (copied from login/page.tsx)
 type ButtonVariant = 'default' | 'outline';
 
-const Button = ({ children, variant = 'default', className = '', onClick, type = 'button' }: { children: React.ReactNode; variant?: ButtonVariant; className?: string; onClick?: () => void; type?: 'button' | 'submit' | 'reset'; }) => {
+const Button = ({ children, variant = 'default', className = '', onClick, type = 'button' }: { children: React.ReactNode; variant?: ButtonVariant; className?: string; onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void; type?: 'button' | 'submit' | 'reset'; }) => {
   const baseStyles = 'px-4 py-2 rounded-md font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2';
   const variants = {
     default: 'bg-[#003087] text-white hover:bg-[#002166] focus:ring-[#003087]',
@@ -37,6 +37,22 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(({ className = '', 
 Input.displayName = 'Input';
 
 export default function RegisterPage() {
+  const [isConfirmOpen, setIsConfirmOpen] = React.useState(false);
+
+  const openConfirm = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    setIsConfirmOpen(true);
+  };
+
+  React.useEffect(() => {
+    if (!isConfirmOpen) return;
+    const onKey = (ev: KeyboardEvent) => {
+      if (ev.key === "Escape") setIsConfirmOpen(false);
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [isConfirmOpen]);
+
   return (
     <section className="min-h-screen bg-white">
      
@@ -107,6 +123,7 @@ export default function RegisterPage() {
             </div>
             <Button
               className="w-full mt-8 bg-[#003087] text-white text-lg font-semibold py-3 rounded-md shadow-none cursor-pointer"
+              onClick={openConfirm}
             >
               Register as a new user
             </Button>
@@ -121,6 +138,53 @@ export default function RegisterPage() {
                 https://farelabs.com/
               </a>
             </p>
+
+            {/* Confirmation Popup (inline modal) */}
+            <div className={isConfirmOpen ? "fixed inset-0 z-50 flex items-center justify-center" : "hidden"}>
+              {/* Backdrop */}
+              <div className="absolute inset-0 bg-black/40" onClick={() => setIsConfirmOpen(false)} />
+              {/* Content */}
+              <div className="relative mx-4 w-full max-w-lg rounded-lg bg-white px-6 py-8 shadow-xl">
+                <div className="w-full flex flex-col items-center">
+                  {/* Success mark */}
+                  <div className="flex items-center justify-center">
+                    <div className="relative flex items-center justify-center">
+                      <div className="h-28 w-28 rounded-full bg-green-100" />
+                      <div className="absolute h-24 w-24 rounded-full bg-green-200" />
+                      <div className="absolute h-20 w-20 rounded-full bg-green-500 flex items-center justify-center">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="white"
+                          strokeWidth="3"
+                          className="h-10 w-10"
+                        >
+                          <path d="M20 6L9 17l-5-5" />
+                        </svg>
+                      </div>
+                    </div>
+                  </div>
+
+                  <h3 className="mt-8 text-2xl md:text-3xl font-bold text-gray-800 text-center">
+                    Thank You for Registering!
+                  </h3>
+
+                  <div className="mt-6 w-full rounded-lg bg-green-100 px-6 py-5 text-gray-700">
+                    <p className="text-sm leading-6 text-center">
+                      We appreciate your interest in becoming a member of our platform. Your
+                      application is currently under review, and we will notify you via email
+                      with your username and password once your registration is approved. If
+                      your application meets the required criteria, you will gain access to our
+                      resources and services.
+                    </p>
+                    <p className="mt-3 text-sm leading-6 text-center">
+                      Thank you for choosing us, and we look forward to serving you!
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
           </form>
 
           {/* PT Calendar Card */}

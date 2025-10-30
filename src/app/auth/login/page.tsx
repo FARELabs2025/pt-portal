@@ -60,6 +60,7 @@ export default function FarelabsLogin() {
 
   const handleSubmit = () => {
     console.log('Login submitted:', { username, password });
+    router.push('/dashboard');
   };
 
   return (
