@@ -8,8 +8,28 @@ import { useRouter } from "next/navigation";
 
 export default function YourOrders() {
   const router = useRouter();
+  
+  interface OrderRow {
+    ptScheme: string;
+    ptItem: string;
+    orderDate: string;
+    orderStatus: string;
+    labCode: string;
+    price: string;
+  }
+
+  interface Column {
+    key: string;
+    label: string;
+    render?: (
+      value: unknown,
+      row: Record<string, unknown>,
+      localIndex?: number,
+      actualIndex?: number
+    ) => React.ReactNode;
+  }
   // Extended dummy data for pagination testing
-  const ordersData = [
+  const ordersData: OrderRow[] = [
     {
       ptScheme: "Cereals And Cereal Based Products (MOMB-2406)",
       ptItem: "Soya/ Corn/Maize/ Rice",
@@ -173,13 +193,13 @@ export default function YourOrders() {
     },
   ];
 
-  const columns = [
+  const columns: Column[] = [
     {
       key: "ptScheme",
       label: "PT Scheme & Code",
-      render: (value: string) => (
+      render: (value: unknown) => (
         <span className="font-bold">
-          {value || ''}
+          {String(value ?? '')}
         </span>
       ),
     },
@@ -190,43 +210,43 @@ export default function YourOrders() {
     {
       key: "orderDate",
       label: "Order Date",
-      render: (value: string) => (
+      render: (value: unknown) => (
         <span className="font-bold">
-          {value || ''}
+          {String(value ?? '')}
         </span>
       ),
     },
     {
       key: "orderStatus",
       label: "Order Status",
-      render: (value: string) => (
+      render: (value: unknown) => (
         <span className="text-[#002A80] font-bold">
-          {value || ''}
+          {String(value ?? '')}
         </span>
       ),
     },
     {
       key: "labCode",
       label: "Lab Code",
-      render: (value: string) => (
+      render: (value: unknown) => (
         <span className="font-bold">
-          {value || ''}
+          {String(value ?? '')}
         </span>
       ),
     },
     {
       key: "price",
       label: "Price",
-      render: (value: string) => (
+      render: (value: unknown) => (
         <span className="font-bold">
-          {value || ''}
+          {String(value ?? '')}
         </span>
       ),
     },
     {
       key: "trackOrder",
       label: "Track Order",
-      render: (_value: unknown, row: unknown) => (
+      render: (_value: unknown, row: Record<string, unknown>) => (
         <Button
           variant={String((row as Record<string, unknown>).orderStatus) === "Completed" ? "default" : "outline"}
           size="sm"
@@ -288,7 +308,7 @@ export default function YourOrders() {
         <div className="h-full overflow-hidden">
           <DataTable
             columns={columns}
-            data={ordersData}
+            data={ordersData as unknown as Record<string, unknown>[]}
             searchable={false}
             pagination={true}
             itemsPerPage={7}
