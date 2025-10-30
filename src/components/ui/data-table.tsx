@@ -19,6 +19,7 @@ interface DataTableProps {
   searchPlaceholder?: string;
   itemsPerPage?: number;
   className?: string;
+  backButton?: React.ReactNode;
 }
 
 export function DataTable({
@@ -29,6 +30,7 @@ export function DataTable({
   searchPlaceholder = "Search...",
   itemsPerPage = 10,
   className = "",
+  backButton,
 }: DataTableProps) {
   const [searchTerm, setSearchTerm] = React.useState("");
   const [currentPage, setCurrentPage] = React.useState(1);
@@ -110,44 +112,59 @@ export function DataTable({
         </table>
       </div>
 
-      {/* Pagination - Always at bottom */}
-      {pagination && totalPages > 1 && (
-        <div className="flex items-center justify-center space-x-2 mt-4">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => handlePageChange(currentPage - 1)}
-            disabled={currentPage === 1}
-            className="cursor-pointer"
-          >
-            <ChevronLeft className="h-4 w-4" />
-          </Button>
+      {/* Pagination/Back Button - Always at bottom */}
+      {(pagination || backButton) && (
+        <div className="flex items-center justify-between mt-4 relative">
+          {/* Back Button on the left */}
+          <div className="shrink-0">
+            {backButton}
+          </div>
           
-          {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
-            <Button
-              key={page}
-              variant={currentPage === page ? "default" : "outline"}
-              size="sm"
-              onClick={() => handlePageChange(page)}
-              className={
-                currentPage === page 
-                  ? "bg-[#002A80] text-white hover:bg-[#002A80]/90 cursor-pointer" 
-                  : "border-gray-300 text-gray-700 hover:bg-gray-50 cursor-pointer"
-              }
-            >
-              {page}
-            </Button>
-          ))}
+          {/* Pagination in the center */}
+          <div className="flex-1 flex justify-center">
+            {pagination && totalPages > 1 && (
+              <div className="flex items-center space-x-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => handlePageChange(currentPage - 1)}
+                  disabled={currentPage === 1}
+                  className="cursor-pointer"
+                >
+                  <ChevronLeft className="h-4 w-4" />
+                </Button>
+                
+                {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+                  <Button
+                    key={page}
+                    variant={currentPage === page ? "default" : "outline"}
+                    size="sm"
+                    onClick={() => handlePageChange(page)}
+                    className={
+                      currentPage === page 
+                        ? "bg-[#002A80] text-white hover:bg-[#002A80]/90 cursor-pointer" 
+                        : "border-gray-300 text-gray-700 hover:bg-gray-50 cursor-pointer"
+                    }
+                  >
+                    {page}
+                  </Button>
+                ))}
+                
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => handlePageChange(currentPage + 1)}
+                  disabled={currentPage === totalPages}
+                  className="cursor-pointer"
+                >
+                  <ChevronRight className="h-4 w-4" />
+                </Button>
+              </div>
+            )}
+          </div>
           
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => handlePageChange(currentPage + 1)}
-            disabled={currentPage === totalPages}
-            className="cursor-pointer"
-          >
-            <ChevronRight className="h-4 w-4" />
-          </Button>
+          {/* Empty div to balance the layout */}
+          <div className="shrink-0 w-[120px]"></div>
         </div>
       )}
     </div>

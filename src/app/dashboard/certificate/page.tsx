@@ -208,6 +208,15 @@ export default function Certificate() {
             searchable={false}
             pagination={true}
             itemsPerPage={7}
+            backButton={
+              <Button
+                onClick={() => router.push("/dashboard")}
+                variant="outline"
+                className="border-[#002A80] text-[#002A80] hover:bg-[#002A80] hover:text-white"
+              >
+                Back to Dashboard
+              </Button>
+            }
           />
         </div>
       </div>
