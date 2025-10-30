@@ -46,7 +46,7 @@ pids
 *.seed
 *.pid.lock
 
-# Coverage directory used by tools like istanbulње
+# Coverage directory used by tools like istanbul
 coverage/
 
 # nyc test coverage
