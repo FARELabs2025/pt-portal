@@ -71,7 +71,7 @@ export default function Dashboard() {
               {/* First Row - 3 Cards */}
               <div className="grid grid-cols-3 gap-6">
                 {/* Your Orders Card */}
-                <Card className="bg-[#E6EEFF] border-0 shadow-sm cursor-pointer hover:shadow-md transition-shadow" onClick={handleYourOrdersClick}>
+                <Card className="bg-[#E6EEFF] border-0 shadow-sm cursor-pointer hover:shadow-md hover:-translate-y-1 transition-all" onClick={handleYourOrdersClick}>
                   <CardContent className="p-6">
                     <div className="flex flex-col items-center text-center space-y-4">
                       <div className="w-16 h-16 bg-[#002A80] rounded-full flex items-center justify-center">
@@ -86,7 +86,7 @@ export default function Dashboard() {
                 </Card>
 
                 {/* Result Submission Card */}
-                <Card className="bg-[#E6EEFF] border-0 shadow-sm cursor-pointer hover:shadow-md transition-shadow" onClick={handleResultSubmissionClick}>
+                <Card className="bg-[#E6EEFF] border-0 shadow-sm cursor-pointer hover:shadow-md hover:-translate-y-1 transition-all" onClick={handleResultSubmissionClick}>
                   <CardContent className="p-6">
                     <div className="flex flex-col items-center text-center space-y-4">
                       <div className="w-16 h-16 bg-[#002A80] rounded-full flex items-center justify-center">
@@ -101,7 +101,7 @@ export default function Dashboard() {
                 </Card>
 
                 {/* PT Result / Certificate Card */}
-                <Card className="bg-[#E6EEFF] border-0 shadow-sm cursor-pointer hover:shadow-md transition-shadow" onClick={handleCertificateClick}>
+                <Card className="bg-[#E6EEFF] border-0 shadow-sm cursor-pointer hover:shadow-md hover:-translate-y-1 transition-all" onClick={handleCertificateClick}>
                   <CardContent className="p-6">
                     <div className="flex flex-col items-center text-center space-y-4">
                       <div className="w-16 h-16 bg-[#002A80] rounded-full flex items-center justify-center">
@@ -119,35 +119,30 @@ export default function Dashboard() {
               {/* Second Row - 2 Cards */}
               <div className="grid grid-cols-3 gap-6">
                 {/* Download Calendar Card */}
-                <Card className="bg-[#E6EEFF] border-0 shadow-sm">
+                <Card className="bg-[#E6EEFF] border-0 shadow-sm cursor-pointer hover:shadow-md hover:-translate-y-1 transition-all">
                   <CardContent className="p-6">
                     <div className="flex flex-col items-center text-center space-y-4">
                       <div className="w-16 h-16 bg-[#002A80] rounded-full flex items-center justify-center">
                         <Calendar className="h-8 w-8 text-white" />
                       </div>
                       <div>
-                        <h3 className="text-xl font-bold text-gray-800 mb-4">Download Calender</h3>
-                        <div className="space-y-3">
-                          <Button className="w-full bg-[#002A80] hover:bg-[#002A80]/90 text-white flex items-center justify-center space-x-2">
-                            <span>PT Calender National</span>
-                            <Download className="h-4 w-4" />
-                          </Button>
-                          <Button className="w-full bg-[white]  text-[#002A80] flex items-center justify-center space-x-2">
-                            <span>PT Calender International</span>
-                            <Download className="h-4 w-4" />
-                          </Button>
-                        </div>
+                        <h3 className="text-xl font-bold text-gray-800 mb-8">Download Calender</h3>
+                        <p className="text-sm text-gray-600 mb-4 ">Download PT Calendar to view PT Schemes and Parameters</p>
+                        <Button className="w-full bg-[#002A80] hover:bg-[#002A80]/90 text-white flex items-center justify-center space-x-2">
+                          <span>PT Calender</span>
+                          <Download className="h-4 w-4" />
+                        </Button>
                       </div>
                     </div>
                   </CardContent>
                 </Card>
 
                 {/* Survey Card */}
-                <Card className="bg-[#E6EEFF] border-0 shadow-sm col-span-2">
+                <Card className="bg-[#E6EEFF] border-0 shadow-sm col-span-2 cursor-pointer hover:shadow-md hover:-translate-y-1 transition-all">
                   <CardContent className="p-6">
                     <div className="flex items-center h-full">
                       <div className="w-1/2 pr-4">
-                        <h3 className="text-xl font-bold text-gray-800 mb-3">Survey</h3>
+                        <h3 className="text-xl font-bold text-gray-800 mb-4">Survey</h3>
                         <p className="text-sm text-gray-600 mb-4 leading-relaxed">
                           We value your feedback and strive to improve our services. Please take a moment to complete our survey to help us understand your needs and enhance your experience. Thank you for your time and support!
                         </p>

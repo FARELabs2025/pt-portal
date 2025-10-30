@@ -171,7 +171,7 @@ export default function Certificate() {
               />
             </div>
             <Button className="bg-[#002A80] hover:bg-[#002A80]/90 text-white px-6">
-              All Categories
+              All PT Scheme
             </Button>
           </div>
         </div>
