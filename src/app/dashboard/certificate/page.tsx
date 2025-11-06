@@ -134,10 +134,6 @@ export default function Certificate() {
               ? "bg-[white] text-[#002A80] hover:bg-[#002A80]/90 flex items-center gap-2 cursor-pointer"
               : "bg-white text-[#002A80] border border-[#002A80] hover:bg-[#002A80] hover:text-white flex items-center gap-2 cursor-pointer"
           }
-=======
-          onClick={() => handleDownloadResult(row)}
-          className="bg-white text-[#002A80] border border-[#002A80] hover:bg-[#002A80] hover:text-white flex items-center gap-2 cursor-pointer"
->>>>>>> 53950f77be4f1e03261995509baad1ee909d9dfb
         >
           <FileText className="h-4 w-4" />
           Download Report
@@ -157,10 +153,6 @@ export default function Certificate() {
               ? "bg-[#002A80] text-white hover:bg-[#002A80]/90 flex items-center gap-2 cursor-pointer"
               : "bg-white text-[#002A80] border border-[#002A80] hover:bg-[#002A80] hover:text-white flex items-center gap-2 cursor-pointer"
           }
-=======
-          onClick={() => handleDownloadCertificate(row)}
-          className="bg-white text-[#002A80] border border-[#002A80] hover:bg-[#002A80] hover:text-white flex items-center gap-2 cursor-pointer"
->>>>>>> 53950f77be4f1e03261995509baad1ee909d9dfb
         >
           <FileText className="h-4 w-4" />
           Download Certificate

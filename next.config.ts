@@ -1,7 +1,7 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  // ESLint is handled separately
+  /* config options here */
 };
 
 export default nextConfig;

@@ -5,17 +5,9 @@ import { Input } from "@/components/ui/input";
 import { DataTable } from "@/components/ui/data-table";
 import { Search } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useState, useEffect } from "react";
-import { api } from "@/app/api/api";
 
 export default function YourOrders() {
   const router = useRouter();
-  const [user, setUser] = useState<any>(null);
-
-  useEffect(() => {
-    const userData = api.getUser();
-    setUser(userData);
-  }, []);
   
   interface OrderRow {
     ptScheme: string;
@@ -278,7 +270,7 @@ export default function YourOrders() {
           <div className="flex items-center space-x-6">
             <h1 className="text-3xl font-bold">
               <span className="text-gray-800">Welcome </span>
-              <span className="text-[#002A80]">{user?.labCode || user?.name || "User"}</span>
+              <span className="text-[#002A80]">MT-0121</span>
             </h1>
           </div>
           <div className="flex items-center space-x-4">
