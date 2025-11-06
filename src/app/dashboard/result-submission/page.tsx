@@ -4,11 +4,19 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { DataTable } from "@/components/ui/data-table";
 import { Search, FileText } from "lucide-react";
-import { useRef } from "react";
+import { useRef, useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { api } from "@/app/api/api";
+import axios from "axios";
 
 export default function ResultSubmission() {
   const router = useRouter();
+  const [user, setUser] = useState<any>(null);
+
+  useEffect(() => {
+    const userData = api.getUser();
+    setUser(userData);
+  }, []);
 
   interface SubmissionRow {
     ptScheme: string;
@@ -149,7 +157,9 @@ export default function ResultSubmission() {
       // const formData = new FormData();
       // formData.append('file', file);
       // formData.append('rowIndex', rowIndex.toString());
-      // fetch('/api/upload', { method: 'POST', body: formData });
+      // await axios.post('/api/upload', formData, {
+      //   headers: { 'Content-Type': 'multipart/form-data' }
+      // });
       
       alert(`File "${file.name}" selected for upload.`);
       
@@ -239,7 +249,7 @@ export default function ResultSubmission() {
           <div className="flex items-center space-x-6">
             <h1 className="text-3xl font-bold">
               <span className="text-gray-800">Welcome </span>
-              <span className="text-[#002A80]">MT-0121</span>
+              <span className="text-[#002A80]">{user?.labCode || user?.name || "User"}</span>
             </h1>
           </div>
           <div className="flex items-center space-x-4">

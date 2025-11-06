@@ -25,6 +25,8 @@ out/
 /out/
 build/
 /build
+dist/
+/dist
 
 # production
 /build
