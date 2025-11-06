@@ -1,19 +1,18 @@
 "use client";
 import React from "react";
 import Image from "next/image";
-import axios from "axios";
 
 // ShadCN UI Components (copied from login/page.tsx)
 type ButtonVariant = 'default' | 'outline';
 
-const Button = ({ children, variant = 'default', className = '', onClick, type = 'button', disabled = false }: { children: React.ReactNode; variant?: ButtonVariant; className?: string; onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void; type?: 'button' | 'submit' | 'reset'; disabled?: boolean; }) => {
+const Button = ({ children, variant = 'default', className = '', onClick, type = 'button' }: { children: React.ReactNode; variant?: ButtonVariant; className?: string; onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void; type?: 'button' | 'submit' | 'reset'; }) => {
   const baseStyles = 'px-4 py-2 rounded-md font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2';
   const variants = {
     default: 'bg-[#003087] text-white hover:bg-[#002166] focus:ring-[#003087]',
     outline: 'border-2 border-[#003087] text-[#003087] hover:bg-[#003087] hover:text-white focus:ring-[#003087]',
   };
   return (
-    <button type={type} onClick={onClick} disabled={disabled} className={`${baseStyles} ${variants[variant]} ${className}`}>
+    <button type={type} onClick={onClick} className={`${baseStyles} ${variants[variant]} ${className}`}>
       {children}
     </button>
   );
@@ -39,77 +38,10 @@ Input.displayName = 'Input';
 
 export default function RegisterPage() {
   const [isConfirmOpen, setIsConfirmOpen] = React.useState(false);
-  const [loading, setLoading] = React.useState(false);
-  const [error, setError] = React.useState('');
-  
-  // Form state
-  const [formData, setFormData] = React.useState({
-    name: '',
-    labName: '',
-    accreditationNo: '',
-    email: '',
-    mobileNo: '',
-    county: '',
-    postalZipCode: '',
-    city: '',
-    address: '',
-  });
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
-  };
-
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const openConfirm = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    setError('');
-    setLoading(true);
-
-    try {
-      const response = await axios.post('/api/auth/register', {
-        name: formData.name,
-        labName: formData.labName,
-        accreditationNo: formData.accreditationNo || undefined,
-        email: formData.email,
-        mobileNo: formData.mobileNo,
-        county: formData.county || undefined,
-        postalZipCode: formData.postalZipCode,
-        city: formData.city || undefined,
-        address: formData.address || undefined,
-      });
-
-      const data = response.data;
-
-      if (data.success) {
-        setIsConfirmOpen(true);
-        // Reset form
-        setFormData({
-          name: '',
-          labName: '',
-          accreditationNo: '',
-          email: '',
-          mobileNo: '',
-          county: '',
-          postalZipCode: '',
-          city: '',
-          address: '',
-        });
-      } else {
-        setError(data.message || 'Registration failed. Please try again.');
-      }
-    } catch (err: any) {
-      console.error('Registration error:', err);
-      if (err.response?.data?.message) {
-        setError(err.response.data.message);
-      } else {
-        setError('Network error. Please check your connection and try again.');
-      }
-    } finally {
-      setLoading(false);
-    }
+    setIsConfirmOpen(true);
   };
 
   React.useEffect(() => {
@@ -122,7 +54,7 @@ export default function RegisterPage() {
   }, [isConfirmOpen]);
 
   return (
-    <section className="min-h-screen bg-white pt-16">
+    <section className="min-h-screen bg-white">
      
 
       {/* Main Content */}
@@ -132,136 +64,68 @@ export default function RegisterPage() {
         </h2>
         <div className="flex flex-col lg:flex-row gap-8 w-full max-w-6xl">
           {/* Registration Form */}
-          <form onSubmit={handleSubmit} className="flex-1 bg-white rounded-lg shadow-lg px-8 py-6">
-            {/* Error Message */}
-            {error && (
-              <div className="mb-4 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-md text-sm">
-                {error}
-              </div>
-            )}
-
+          <form className="flex-1 bg-white rounded-lg shadow-lg px-8 py-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-5">
               <div className="col-span-1">
                 <label className="block text-base font-medium text-gray-700 mb-1.5">
                   Name*
                 </label>
-                <Input 
-                  name="name"
-                  placeholder="Enter your name" 
-                  value={formData.name}
-                  onChange={handleInputChange}
-                  required
-                  disabled={loading}
-                />
+                <Input placeholder="Enter your name" />
               </div>
               <div className="col-span-1">
                 <label className="block text-base font-medium text-gray-700 mb-1.5">
                   Lab Name*
                 </label>
-                <Input 
-                  name="labName"
-                  placeholder="Lab Name" 
-                  value={formData.labName}
-                  onChange={handleInputChange}
-                  required
-                  disabled={loading}
-                />
+                <Input placeholder="Lab Name" />
               </div>
               <div className="col-span-2">
                 <label className="block text-base font-medium text-gray-700 mb-1.5">
                   Accreditation No.
                 </label>
-                <Input 
-                  name="accreditationNo"
-                  placeholder="Available / Not available" 
-                  value={formData.accreditationNo}
-                  onChange={handleInputChange}
-                  disabled={loading}
-                />
+                <Input placeholder="Available / Not available" />
               </div>
               <div className="col-span-1">
                 <label className="block text-base font-medium text-gray-700 mb-1.5">
                   Email*
                 </label>
-                <Input 
-                  name="email"
-                  placeholder="Email" 
-                  type="email" 
-                  value={formData.email}
-                  onChange={handleInputChange}
-                  required
-                  disabled={loading}
-                />
+                <Input placeholder="Email" type="email" />
               </div>
               <div className="col-span-1">
                 <label className="block text-base font-medium text-gray-700 mb-1.5">
                   Mobile no*
                 </label>
-                <Input 
-                  name="mobileNo"
-                  placeholder="Mobile no" 
-                  value={formData.mobileNo}
-                  onChange={handleInputChange}
-                  required
-                  disabled={loading}
-                />
+                <Input placeholder="Mobile no" />
               </div>
               <div className="col-span-1">
                 <label className="block text-base font-medium text-gray-700 mb-1.5">
                   County
                 </label>
-                <Input 
-                  name="county"
-                  placeholder="Country" 
-                  value={formData.county}
-                  onChange={handleInputChange}
-                  disabled={loading}
-                />
+                <Input placeholder="Country" />
               </div>
               <div className="col-span-1">
                 <label className="block text-base font-medium text-gray-700 mb-1.5">
                   Postal / Zip Code*
                 </label>
-                <Input 
-                  name="postalZipCode"
-                  placeholder="Code" 
-                  value={formData.postalZipCode}
-                  onChange={handleInputChange}
-                  required
-                  disabled={loading}
-                />
+                <Input placeholder="Code" />
               </div>
               <div className="col-span-1">
                 <label className="block text-base font-medium text-gray-700 mb-1.5">
                   City
                 </label>
-                <Input 
-                  name="city"
-                  placeholder="City" 
-                  value={formData.city}
-                  onChange={handleInputChange}
-                  disabled={loading}
-                />
+                <Input placeholder="City" />
               </div>
               <div className="col-span-1">
                 <label className="block text-base font-medium text-gray-700 mb-1.5">
                   Address
                 </label>
-                <Input 
-                  name="address"
-                  placeholder="Address" 
-                  value={formData.address}
-                  onChange={handleInputChange}
-                  disabled={loading}
-                />
+                <Input placeholder="Address" />
               </div>
             </div>
             <Button
-              type="submit"
-              className="w-full mt-8 bg-[#003087] text-white text-lg font-semibold py-3 rounded-md shadow-none cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
-              disabled={loading}
+              className="w-full mt-8 bg-[#003087] text-white text-lg font-semibold py-3 rounded-md shadow-none cursor-pointer"
+              onClick={openConfirm}
             >
-              {loading ? 'Registering...' : 'Register as a new user'}
+              Register as a new user
             </Button>
             <p className="text-xs text-gray-700 text-center mt-4">
               For further information about how uses any personal data collected from you, please see our Privacy Notice at{" "}

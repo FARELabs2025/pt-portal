@@ -3,19 +3,18 @@ import React, { useState } from 'react';
 import { Eye, EyeOff } from 'lucide-react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import axios from 'axios';
 
 // ShadCN UI Components
 type ButtonVariant = 'default' | 'outline';
 
-const Button = ({ children, variant = 'default', className = '', onClick, type = 'button', disabled = false }: { children: React.ReactNode; variant?: ButtonVariant; className?: string; onClick?: () => void; type?: 'button' | 'submit' | 'reset'; disabled?: boolean; }) => {
+const Button = ({ children, variant = 'default', className = '', onClick, type = 'button' }: { children: React.ReactNode; variant?: ButtonVariant; className?: string; onClick?: () => void; type?: 'button' | 'submit' | 'reset'; }) => {
   const baseStyles = 'px-4 py-2 rounded-md font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2';
   const variants = {
     default: 'bg-[#003087] text-white hover:bg-[#002166] focus:ring-[#003087]',
     outline: 'border-2 border-[#003087] text-[#003087] hover:bg-[#003087] hover:text-white focus:ring-[#003087]',
   };
   return (
-    <button type={type} onClick={onClick} disabled={disabled} className={`${baseStyles} ${variants[variant]} ${className}`}>
+    <button type={type} onClick={onClick} className={`${baseStyles} ${variants[variant]} ${className}`}>
       {children}
     </button>
   );
@@ -58,48 +57,14 @@ export default function FarelabsLogin() {
   const [showPassword, setShowPassword] = useState(false);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setError('');
-    setLoading(true);
-
-    try {
-      // Call login API
-      const response = await axios.post('/api/auth/login', {
-        username,
-        password,
-      });
-
-      const data = response.data;
-
-      if (data.success) {
-        // Store token and user data
-        localStorage.setItem('token', data.data.token);
-        localStorage.setItem('user', JSON.stringify(data.data.user));
-        
-        // Redirect to dashboard
-        router.push('/dashboard');
-      } else {
-        // Show error message
-        setError(data.message || 'Login failed. Please try again.');
-      }
-    } catch (err: any) {
-      console.error('Login error:', err);
-      if (err.response?.data?.message) {
-        setError(err.response.data.message);
-      } else {
-        setError('Network error. Please check your connection and try again.');
-      }
-    } finally {
-      setLoading(false);
-    }
+  const handleSubmit = () => {
+    console.log('Login submitted:', { username, password });
+    router.push('/dashboard');
   };
 
   return (
-    <div className="min-h-screen w-full relative overflow-hidden flex flex-col pt-16">
+    <div className="h-screen w-full relative overflow-hidden flex flex-col">
       {/* Background Image with Overlay */}
       <div 
         className="absolute inset-0 bg-cover bg-center bg-no-repeat"
@@ -119,14 +84,7 @@ export default function FarelabsLogin() {
             <p className="text-gray-600 text-center text-sm">Nice to see you again!</p>
           </div>
 
-          <form onSubmit={handleSubmit} className="space-y-4">
-            {/* Error Message */}
-            {error && (
-              <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-md text-sm">
-                {error}
-              </div>
-            )}
-
+          <div className="space-y-4">
             {/* Username Input */}
             <div>
               <label htmlFor="username" className="block text-sm font-medium text-gray-700 mb-1.5">
@@ -138,8 +96,6 @@ export default function FarelabsLogin() {
                 placeholder="Username"
                 value={username}
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => setUsername(e.target.value)}
-                required
-                disabled={loading}
               />
             </div>
 
@@ -156,14 +112,11 @@ export default function FarelabsLogin() {
                   value={password}
                   onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPassword(e.target.value)}
                   className="pr-10"
-                  required
-                  disabled={loading}
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
                   className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
-                  disabled={loading}
                 >
                   {showPassword ? (
                     <EyeOff className="cursor-pointer w-5 h-5" />
@@ -175,12 +128,8 @@ export default function FarelabsLogin() {
             </div>
 
             {/* Submit Button */}
-            <Button 
-              type="submit" 
-              className="cursor-pointer w-full py-2.5 text-base font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
-              disabled={loading}
-            >
-              {loading ? 'Logging in...' : 'Submit'}
+            <Button onClick={handleSubmit} className="cursor-pointer w-full py-2.5 text-base font-semibold">
+              Submit
             </Button>
 
             {/* Forgot Password Link */}
@@ -192,7 +141,7 @@ export default function FarelabsLogin() {
                 Forgotten password?
               </a>
             </div>
-          </form>
+          </div>
 
           {/* Divider */}
           <div className="my-6 border-t border-gray-200"></div>
