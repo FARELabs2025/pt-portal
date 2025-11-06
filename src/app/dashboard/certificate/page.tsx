@@ -5,17 +5,9 @@ import { Input } from "@/components/ui/input";
 import { DataTable } from "@/components/ui/data-table";
 import { Search, FileText } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useState, useEffect } from "react";
-import { api } from "@/app/api/api";
 
 export default function Certificate() {
   const router = useRouter();
-  const [user, setUser] = useState<any>(null);
-
-  useEffect(() => {
-    const userData = api.getUser();
-    setUser(userData);
-  }, []);
 
   interface CertificateRow {
     ptScheme: string;
@@ -135,8 +127,17 @@ export default function Certificate() {
       render: (_value: unknown, row: Record<string, unknown>, localIndex?: number) => (
         <Button
           size="sm"
+<<<<<<< HEAD
           onClick={() => handleDownloadResult(row as unknown as CertificateRow)}
+          className={
+            localIndex === 0
+              ? "bg-[white] text-[#002A80] hover:bg-[#002A80]/90 flex items-center gap-2 cursor-pointer"
+              : "bg-white text-[#002A80] border border-[#002A80] hover:bg-[#002A80] hover:text-white flex items-center gap-2 cursor-pointer"
+          }
+=======
+          onClick={() => handleDownloadResult(row)}
           className="bg-white text-[#002A80] border border-[#002A80] hover:bg-[#002A80] hover:text-white flex items-center gap-2 cursor-pointer"
+>>>>>>> 53950f77be4f1e03261995509baad1ee909d9dfb
         >
           <FileText className="h-4 w-4" />
           Download Report
@@ -149,8 +150,17 @@ export default function Certificate() {
       render: (_value: unknown, row: Record<string, unknown>, localIndex?: number) => (
         <Button
           size="sm"
+<<<<<<< HEAD
           onClick={() => handleDownloadCertificate(row as unknown as CertificateRow)}
+          className={
+            localIndex === 0
+              ? "bg-[#002A80] text-white hover:bg-[#002A80]/90 flex items-center gap-2 cursor-pointer"
+              : "bg-white text-[#002A80] border border-[#002A80] hover:bg-[#002A80] hover:text-white flex items-center gap-2 cursor-pointer"
+          }
+=======
+          onClick={() => handleDownloadCertificate(row)}
           className="bg-white text-[#002A80] border border-[#002A80] hover:bg-[#002A80] hover:text-white flex items-center gap-2 cursor-pointer"
+>>>>>>> 53950f77be4f1e03261995509baad1ee909d9dfb
         >
           <FileText className="h-4 w-4" />
           Download Certificate
@@ -167,7 +177,7 @@ export default function Certificate() {
           <div className="flex items-center space-x-6">
             <h1 className="text-3xl font-bold">
               <span className="text-gray-800">Welcome </span>
-              <span className="text-[#002A80]">{user?.labCode || user?.name || "User"}</span>
+              <span className="text-[#002A80]">MT-0121</span>
             </h1>
           </div>
           <div className="flex items-center space-x-4">
@@ -179,7 +189,7 @@ export default function Certificate() {
               />
             </div>
             <Button className="bg-[#002A80] hover:bg-[#002A80]/90 text-white px-6">
-              All PT Scheme
+              All Categories
             </Button>
           </div>
         </div>
