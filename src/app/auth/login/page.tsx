@@ -1,51 +1,98 @@
-"use client";
-import React, { useState } from "react";
-import { Eye, EyeOff } from "lucide-react";
-import Image from "next/image";
-import { useRouter } from "next/navigation";
-import axios from "axios";
-import { Card, CardContent } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
+"use client"
+import React, { useState } from 'react';
+import { Eye, EyeOff } from 'lucide-react';
+import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 
+// ShadCN UI Components
+type ButtonVariant = 'default' | 'outline';
+
+const Button = ({ children, variant = 'default', className = '', onClick, type = 'button', disabled = false }: { children: React.ReactNode; variant?: ButtonVariant; className?: string; onClick?: () => void; type?: 'button' | 'submit' | 'reset'; disabled?: boolean; }) => {
+  const baseStyles = 'px-4 py-2 rounded-md font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2';
+  const variants = {
+    default: 'bg-[#003087] text-white hover:bg-[#002166] focus:ring-[#003087]',
+    outline: 'border-2 border-[#003087] text-[#003087] hover:bg-[#003087] hover:text-white focus:ring-[#003087]',
+  };
+  return (
+    <button type={type} onClick={onClick} disabled={disabled} className={`${baseStyles} ${variants[variant]} ${className}`}>
+      {children}
+    </button>
+  );
+};
+
+interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
+  className?: string;
+  type?: string;
+}
+
+const Input = React.forwardRef<HTMLInputElement, InputProps>(({ className = '', type = 'text', ...props }, ref) => {
+  return (
+    <input
+      type={type}
+      className={`w-full px-3 py-2.5 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#003087] focus:border-transparent transition-all ${className}`}
+      ref={ref}
+      {...props}
+    />
+  );
+});
+
+Input.displayName = 'Input';
+
+interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
+  className?: string;
+  children?: React.ReactNode;
+}
+
+const Card = ({ children, className = '', ...props }: CardProps) => {
+  return (
+    <div className={`bg-white rounded-lg shadow-lg ${className}`} {...props}>
+      {children}
+    </div>
+  );
+};
+
+// Main Login Component
 export default function FarelabsLogin() {
   const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState('');
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setError("");
-    setLoading(true);
+  const handleSubmit = async () => {
+    if (!username || !password) {
+      setError('Please enter both username and password');
+      return;
+    }
+
+    setIsLoading(true);
+    setError('');
 
     try {
-      const response = await axios.post("/api/auth/login", {
-        username,
-        password,
+      const response = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ username, password }),
       });
 
-      const data = response.data;
+      const data = await response.json();
 
       if (data.success) {
-        localStorage.setItem("token", data.data.token);
-        localStorage.setItem("user", JSON.stringify(data.data.user));
-
-        router.push("/dashboard");
+        // Store user data in localStorage
+        localStorage.setItem('user', JSON.stringify(data.user));
+        localStorage.setItem('token', data.token);
+        router.push('/dashboard');
       } else {
-        setError(data.message || "Login failed. Please try again.");
+        setError(data.message || 'Login failed. Please try again.');
       }
-    } catch (err: any) {
-      console.error("Login error:", err);
-      if (err.response?.data?.message) {
-        setError(err.response.data.message);
-      } else {
-        setError("Network error. Please check your connection and try again.");
-      }
+    } catch (error) {
+      console.error('Login error:', error);
+      setError('An error occurred. Please try again.');
     } finally {
-      setLoading(false);
+      setIsLoading(false);
     }
   };
 
@@ -100,46 +147,49 @@ export default function FarelabsLogin() {
                 />
               </div>
 
-              {/* Password */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1.5">
-                  Password
-                </label>
-                <div className="relative">
-                  <Input
-                    id="password"
-                    type={showPassword ? "text" : "password"}
-                    placeholder="Password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    className="pr-10 text-black"
-                    required
-                    disabled={loading}
-                  />
-                  <Button
-                    type="button"
-                    onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
-                    disabled={loading}
-                    variant="default"
-                  >
-                    {showPassword ? (
-                      <EyeOff className="cursor-pointer w-5 h-5" />
-                    ) : (
-                      <Eye className="cursor-pointer w-5 h-5" />
-                    )}
-                  </Button>
-                </div>
+            {/* Password Input */}
+            <div>
+              <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1.5">
+                Password
+              </label>
+              <div className="relative">
+                <Input
+                  id="password"
+                  type={showPassword ? 'text' : 'password'}
+                  placeholder="Password"
+                  value={password}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPassword(e.target.value)}
+                  className="pr-10"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
+                >
+                  {showPassword ? (
+                    <EyeOff className="cursor-pointer w-5 h-5" />
+                  ) : (
+                    <Eye className="cursor-pointer w-5 h-5" />
+                  )}
+                </button>
               </div>
+            </div>
 
-              {/* Login Button */}
-              <Button
-                type="submit"
-                className="w-full text-base font-semibold bg-[#003087]"
-                disabled={loading}
-              >
-                {loading ? "Logging in..." : "Submit"}
-              </Button>
+            {/* Error Message */}
+            {error && (
+              <div className="text-sm text-red-600 bg-red-50 p-3 rounded-md">
+                {error}
+              </div>
+            )}
+
+            {/* Submit Button */}
+            <Button 
+              onClick={handleSubmit} 
+              className="cursor-pointer w-full py-2.5 text-base font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
+              disabled={isLoading}
+            >
+              {isLoading ? 'Logging in...' : 'Submit'}
+            </Button>
 
               {/* Forgot Password */}
               <div className="text-center">
