@@ -6,6 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 import { 
   Search, 
   Package, 
@@ -19,6 +20,21 @@ import {
 
 export default function Dashboard() {
   const router = useRouter();
+  const [user, setUser] = useState<{ username?: string; email?: string } | null>(null);
+
+  useEffect(() => {
+    // Get user data from localStorage
+    if (typeof window !== 'undefined') {
+      const userData = localStorage.getItem('user');
+      if (userData) {
+        try {
+          setUser(JSON.parse(userData));
+        } catch (error) {
+          console.error('Error parsing user data:', error);
+        }
+      }
+    }
+  }, []);
 
   const handleYourOrdersClick = () => {
     router.push("/dashboard/your-orders");
@@ -44,7 +60,7 @@ export default function Dashboard() {
           <div className="flex items-center space-x-6">
             <h1 className="text-3xl font-bold">
               <span className="text-gray-800">Welcome </span>
-              <span className="text-[#002A80]">MT-0121</span>
+              <span className="text-[#002A80]">{user?.username || 'User'}</span>
             </h1>
           </div>
           <div className="flex items-center space-x-4">
