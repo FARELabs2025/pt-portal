@@ -169,7 +169,7 @@ export const login = async (body: LoginBody): Promise<NextResponse> => {
       return NextResponse.json(
         {
           success: false,
-          message: 'Invalid username or password',
+          message: 'Invalid username',
         },
         { status: 401 }
       );
@@ -205,7 +205,7 @@ export const login = async (body: LoginBody): Promise<NextResponse> => {
       return NextResponse.json(
         {
           success: false,
-          message: 'Invalid username or password',
+          message: 'Invalid password',
         },
         { status: 401 }
       );
