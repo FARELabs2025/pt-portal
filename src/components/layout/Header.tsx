@@ -3,74 +3,13 @@ import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { ShoppingCart, Bell, User, Lock, LogOut } from "lucide-react";
-import { useEffect, useState, useRef } from "react";
+import { Badge } from "@/components/ui/badge";
+import { ShoppingCart, Bell } from "lucide-react";
 
 export default function Header() {
   const pathname = usePathname();
   const router = useRouter();
   const isAuthRoute = pathname?.startsWith("/auth");
-  const [user, setUser] = useState<{ username?: string; email?: string } | null>(null);
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const dropdownRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    // Get user data from localStorage
-    if (typeof window !== 'undefined') {
-      const userData = localStorage.getItem('user');
-      if (userData) {
-        try {
-          setUser(JSON.parse(userData));
-        } catch (error) {
-          console.error('Error parsing user data:', error);
-        }
-      }
-    }
-  }, []);
-
-  // Close dropdown when clicking outside
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
-        setIsDropdownOpen(false);
-      }
-    };
-
-    if (isDropdownOpen) {
-      document.addEventListener('mousedown', handleClickOutside);
-    }
-
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, [isDropdownOpen]);
-
-  const handleLogout = () => {
-    localStorage.removeItem('user');
-    localStorage.removeItem('token');
-    setIsDropdownOpen(false);
-    router.push('/auth/login');
-  };
-
-  const handleEditProfile = () => {
-    setIsDropdownOpen(false);
-    router.push('/dashboard/profile');
-  };
-
-  const handleChangePassword = () => {
-    setIsDropdownOpen(false);
-    router.push('/dashboard/changePassword');
-  };
-
-  // Get initials from username for avatar fallback
-  const getInitials = (username?: string) => {
-    if (!username) return 'U';
-    const parts = username.trim().split(/\s+/);
-    if (parts.length >= 2) {
-      return (parts[0][0] + parts[1][0]).toUpperCase();
-    }
-    return username.substring(0, 2).toUpperCase();
-  };
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-white shadow-sm border-b border-gray-200">
@@ -116,22 +55,15 @@ export default function Header() {
                 </Button> */}
 
                 {/* User Profile */}
-                <div className="flex items-center space-x-2 relative" ref={dropdownRef}>
-                  <div 
-                    className="flex items-center space-x-2 cursor-pointer"
-                    onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                  >
-                    <Avatar className="h-10 w-10">
-                      <AvatarImage src="/api/placeholder/40/40" alt="User" />
-                      <AvatarFallback className="bg-gray-200 text-gray-600">
-                        {getInitials(user?.username)}
-                      </AvatarFallback>
-                    </Avatar>
-                    <div className="hidden sm:block">
-                      <p className="text-sm font-medium text-gray-900">
-                        {user?.username || 'User'}
-                      </p>
-                    </div>
+                <div className="flex items-center space-x-2">
+                  <Avatar className="h-10 w-10">
+                    <AvatarImage src="/api/placeholder/40/40" alt="User" />
+                    <AvatarFallback className="bg-gray-200 text-gray-600">
+                      MT
+                    </AvatarFallback>
+                  </Avatar>
+                  <div className="hidden sm:block">
+                    <p className="text-sm font-medium text-gray-900">MT-0121</p>
                   </div>
 
                   {/* Dropdown Menu */}

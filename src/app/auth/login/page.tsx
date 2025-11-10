@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { Eye, EyeOff } from 'lucide-react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
+import axios from 'axios';
 
 // ShadCN UI Components
 type ButtonVariant = 'default' | 'outline';
@@ -57,47 +58,14 @@ export default function FarelabsLogin() {
   const [showPassword, setShowPassword] = useState(false);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState('');
 
-  const handleSubmit = async () => {
-    if (!username || !password) {
-      setError('Please enter both username and password');
-      return;
-    }
-
-    setIsLoading(true);
-    setError('');
-
-    try {
-      const response = await fetch('/api/auth/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ username, password }),
-      });
-
-      const data = await response.json();
-
-      if (data.success) {
-        // Store user data in localStorage
-        localStorage.setItem('user', JSON.stringify(data.user));
-        localStorage.setItem('token', data.token);
-        router.push('/dashboard');
-      } else {
-        setError(data.message || 'Login failed. Please try again.');
-      }
-    } catch (error) {
-      console.error('Login error:', error);
-      setError('An error occurred. Please try again.');
-    } finally {
-      setIsLoading(false);
-    }
+  const handleSubmit = () => {
+    console.log('Login submitted:', { username, password });
+    router.push('/dashboard');
   };
 
   return (
-    <div className="h-screen w-full relative overflow-hidden flex flex-col">
+    <div className="min-h-screen w-full relative overflow-hidden flex flex-col pt-16">
       {/* Background Image with Overlay */}
       <div 
         className="absolute inset-0 bg-cover bg-center bg-no-repeat"
@@ -117,7 +85,14 @@ export default function FarelabsLogin() {
             <p className="text-gray-600 text-center text-sm">Nice to see you again!</p>
           </div>
 
-          <div className="space-y-4">
+          <form onSubmit={handleSubmit} className="space-y-4">
+            {/* Error Message */}
+            {error && (
+              <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-md text-sm">
+                {error}
+              </div>
+            )}
+
             {/* Username Input */}
             <div>
               <label htmlFor="username" className="block text-sm font-medium text-gray-700 mb-1.5">
@@ -129,6 +104,8 @@ export default function FarelabsLogin() {
                 placeholder="Username"
                 value={username}
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => setUsername(e.target.value)}
+                required
+                disabled={loading}
               />
             </div>
 
@@ -145,11 +122,14 @@ export default function FarelabsLogin() {
                   value={password}
                   onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPassword(e.target.value)}
                   className="pr-10"
+                  required
+                  disabled={loading}
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
                   className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
+                  disabled={loading}
                 >
                   {showPassword ? (
                     <EyeOff className="cursor-pointer w-5 h-5" />
@@ -168,12 +148,8 @@ export default function FarelabsLogin() {
             )}
 
             {/* Submit Button */}
-            <Button 
-              onClick={handleSubmit} 
-              className="cursor-pointer w-full py-2.5 text-base font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
-              disabled={isLoading}
-            >
-              {isLoading ? 'Logging in...' : 'Submit'}
+            <Button onClick={handleSubmit} className="cursor-pointer w-full py-2.5 text-base font-semibold">
+              Submit
             </Button>
 
             {/* Forgot Password Link */}
@@ -185,7 +161,7 @@ export default function FarelabsLogin() {
                 Forgotten password?
               </a>
             </div>
-          </div>
+          </form>
 
           {/* Divider */}
           <div className="my-6 border-t border-gray-200"></div>
