@@ -5,10 +5,20 @@ import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { ShoppingCart, Bell } from "lucide-react";
+import { useEffect, useState } from "react";
+import { api } from "@/app/api/api";
 
 export default function Header() {
   const pathname = usePathname();
   const isAuthRoute = pathname?.startsWith("/auth");
+  const [user, setUser] = useState<any>(null);
+
+  useEffect(() => {
+    if (!isAuthRoute) {
+      const userData = api.getUser();
+      setUser(userData);
+    }
+  }, [isAuthRoute]);
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-white shadow-sm border-b border-gray-200">
@@ -58,11 +68,11 @@ export default function Header() {
                   <Avatar className="h-10 w-10">
                     <AvatarImage src="/api/placeholder/40/40" alt="User" />
                     <AvatarFallback className="bg-gray-200 text-gray-600">
-                      MT
+                      {user?.labCode?.substring(0, 2) || user?.name?.substring(0, 2)?.toUpperCase() || "U"}
                     </AvatarFallback>
                   </Avatar>
                   <div className="hidden sm:block">
-                    <p className="text-sm font-medium text-gray-900">MT-0121</p>
+                    <p className="text-sm font-medium text-gray-900">{user?.labCode || user?.name || "User"}</p>
                   </div>
                 </div>
               </>
