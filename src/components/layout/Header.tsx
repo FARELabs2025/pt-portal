@@ -1,15 +1,24 @@
 "use client"
 import Image from "next/image";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { ShoppingCart, Bell } from "lucide-react";
+import { useEffect, useState } from "react";
+import { api } from "@/app/api/api";
 
 export default function Header() {
   const pathname = usePathname();
-  const router = useRouter();
   const isAuthRoute = pathname?.startsWith("/auth");
+  const [user, setUser] = useState<any>(null);
+
+  useEffect(() => {
+    if (!isAuthRoute) {
+      const userData = api.getUser();
+      setUser(userData);
+    }
+  }, [isAuthRoute]);
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-white shadow-sm border-b border-gray-200">
@@ -43,7 +52,7 @@ export default function Header() {
                 </Button>
 
                 {/* Notifications */}
-                {/* <Button variant="ghost" size="icon" className="relative">
+                <Button variant="ghost" size="icon" className="relative">
                   <div className="w-10 h-10 bg-blue-50 rounded-lg flex items-center justify-center">
                     <Bell className="h-5 w-5 text-blue-600" />
                     <Badge 
@@ -52,47 +61,19 @@ export default function Header() {
                       1
                     </Badge>
                   </div>
-                </Button> */}
+                </Button>
 
                 {/* User Profile */}
                 <div className="flex items-center space-x-2">
                   <Avatar className="h-10 w-10">
                     <AvatarImage src="/api/placeholder/40/40" alt="User" />
                     <AvatarFallback className="bg-gray-200 text-gray-600">
-                      MT
+                      {user?.labCode?.substring(0, 2) || user?.name?.substring(0, 2)?.toUpperCase() || "U"}
                     </AvatarFallback>
                   </Avatar>
                   <div className="hidden sm:block">
-                    <p className="text-sm font-medium text-gray-900">MT-0121</p>
+                    <p className="text-sm font-medium text-gray-900">{user?.labCode || user?.name || "User"}</p>
                   </div>
-
-                  {/* Dropdown Menu */}
-                  {isDropdownOpen && (
-                    <div className="absolute right-0 top-12 mt-2 w-56 bg-white rounded-md shadow-lg border border-gray-200 py-1 z-50">
-                      <button
-                        onClick={handleEditProfile}
-                        className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center space-x-2 transition-colors"
-                      >
-                        <User className="h-4 w-4" />
-                        <span>Edit Profile</span>
-                      </button>
-                      <button
-                        onClick={handleChangePassword}
-                        className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center space-x-2 transition-colors"
-                      >
-                        <Lock className="h-4 w-4" />
-                        <span>Change Password</span>
-                      </button>
-                      <div className="border-t border-gray-200 my-1"></div>
-                      <button
-                        onClick={handleLogout}
-                        className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 flex items-center space-x-2 transition-colors"
-                      >
-                        <LogOut className="h-4 w-4" />
-                        <span>Logout</span>
-                      </button>
-                    </div>
-                  )}
                 </div>
               </>
             )}

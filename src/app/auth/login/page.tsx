@@ -58,10 +58,44 @@ export default function FarelabsLogin() {
   const [showPassword, setShowPassword] = useState(false);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
 
-  const handleSubmit = () => {
-    console.log('Login submitted:', { username, password });
-    router.push('/dashboard');
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setError('');
+    setLoading(true);
+
+    try {
+      // Call login API
+      const response = await axios.post('/api/auth/login', {
+        username,
+        password,
+      });
+
+      const data = response.data;
+
+      if (data.success) {
+        // Store token and user data
+        localStorage.setItem('token', data.data.token);
+        localStorage.setItem('user', JSON.stringify(data.data.user));
+        
+        // Redirect to dashboard
+        router.push('/dashboard');
+      } else {
+        // Show error message
+        setError(data.message || 'Login failed. Please try again.');
+      }
+    } catch (err: any) {
+      console.error('Login error:', err);
+      if (err.response?.data?.message) {
+        setError(err.response.data.message);
+      } else {
+        setError('Network error. Please check your connection and try again.');
+      }
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -140,16 +174,13 @@ export default function FarelabsLogin() {
               </div>
             </div>
 
-            {/* Error Message */}
-            {error && (
-              <div className="text-sm text-red-600 bg-red-50 p-3 rounded-md">
-                {error}
-              </div>
-            )}
-
             {/* Submit Button */}
-            <Button onClick={handleSubmit} className="cursor-pointer w-full py-2.5 text-base font-semibold">
-              Submit
+            <Button 
+              type="submit" 
+              className="cursor-pointer w-full py-2.5 text-base font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
+              disabled={loading}
+            >
+              {loading ? 'Logging in...' : 'Submit'}
             </Button>
 
             {/* Forgot Password Link */}
