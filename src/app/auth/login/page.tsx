@@ -57,42 +57,43 @@ export default function FarelabsLogin() {
   const [showPassword, setShowPassword] = useState(false);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
-  const handleSubmit = async () => {
-    if (!username || !password) {
-      setError('Please enter both username and password');
-      return;
-    }
-
-    setIsLoading(true);
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
     setError('');
+    setLoading(true);
 
     try {
-      const response = await fetch('/api/auth/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ username, password }),
+      // Call login API
+      const response = await axios.post('/api/auth/login', {
+        username,
+        password,
       });
 
-      const data = await response.json();
+      const data = response.data;
 
       if (data.success) {
-        // Store user data in localStorage
-        localStorage.setItem('user', JSON.stringify(data.user));
-        localStorage.setItem('token', data.token);
+        // Store token and user data
+        localStorage.setItem('token', data.data.token);
+        localStorage.setItem('user', JSON.stringify(data.data.user));
+        
+        // Redirect to dashboard
         router.push('/dashboard');
       } else {
+        // Show error message
         setError(data.message || 'Login failed. Please try again.');
       }
-    } catch (error) {
-      console.error('Login error:', error);
-      setError('An error occurred. Please try again.');
+    } catch (err: any) {
+      console.error('Login error:', err);
+      if (err.response?.data?.message) {
+        setError(err.response.data.message);
+      } else {
+        setError('Network error. Please check your connection and try again.');
+      }
     } finally {
-      setIsLoading(false);
+      setLoading(false);
     }
   };
 
@@ -175,20 +176,13 @@ export default function FarelabsLogin() {
               </div>
             </div>
 
-            {/* Error Message */}
-            {error && (
-              <div className="text-sm text-red-600 bg-red-50 p-3 rounded-md">
-                {error}
-              </div>
-            )}
-
             {/* Submit Button */}
             <Button 
-              onClick={handleSubmit} 
+              type="submit" 
               className="cursor-pointer w-full py-2.5 text-base font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
-              disabled={isLoading}
+              disabled={loading}
             >
-              {isLoading ? 'Logging in...' : 'Submit'}
+              {loading ? 'Logging in...' : 'Submit'}
             </Button>
 
               {/* Forgot Password */}

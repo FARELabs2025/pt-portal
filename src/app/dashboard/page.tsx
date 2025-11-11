@@ -6,7 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
 import { 
   Search, 
   Package, 
@@ -21,21 +21,21 @@ import { api } from "@/app/api/api";
 
 export default function Dashboard() {
   const router = useRouter();
-  const [user, setUser] = useState<{ username?: string; email?: string } | null>(null);
+  const [user, setUser] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Get user data from localStorage
-    if (typeof window !== 'undefined') {
-      const userData = localStorage.getItem('user');
-      if (userData) {
-        try {
-          setUser(JSON.parse(userData));
-        } catch (error) {
-          console.error('Error parsing user data:', error);
-        }
-      }
+    // Get user data from localStorage (stored during login)
+    const userData = api.getUser();
+    
+    if (userData) {
+      setUser(userData);
+    } else {
+      // If no user data, redirect to login
+      router.push('/auth/login');
     }
-  }, []);
+    setLoading(false);
+  }, [router]);
 
   const handleYourOrdersClick = () => {
     router.push("/dashboard/your-orders");
@@ -73,7 +73,7 @@ export default function Dashboard() {
           <div className="flex items-center space-x-6">
             <h1 className="text-3xl font-bold">
               <span className="text-gray-800">Welcome </span>
-              <span className="text-[#002A80]">{user?.username || 'User'}</span>
+              <span className="text-[#002A80]">{user.labCode || user.name}</span>
             </h1>
           </div>
           <div className="flex items-center space-x-4">
@@ -84,7 +84,7 @@ export default function Dashboard() {
                 className="pl-10 w-80 border-gray-300"
               />
             </div>
-            <Button className="bg-[#002A80] hover:bg-[#002A80]/90 text-white px-6">
+            <Button className="bg-[#002A80] hover:bg-[#002A80]/90 text-white px-6" onClick={() => router.push("/dashboard/pt-scheme")}>
               All PT Scheme
             </Button>
           </div>
