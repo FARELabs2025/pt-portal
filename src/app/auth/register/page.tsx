@@ -41,7 +41,7 @@ export default function RegisterPage() {
   const [isConfirmOpen, setIsConfirmOpen] = React.useState(false);
   const [loading, setLoading] = React.useState(false);
   const [error, setError] = React.useState('');
-  
+
   // Form state
   const [formData, setFormData] = React.useState({
     name: '',
@@ -100,13 +100,17 @@ export default function RegisterPage() {
       } else {
         setError(data.message || 'Registration failed. Please try again.');
       }
-    } catch (err: any) {
-      console.error('Registration error:', err);
-      if (err.response?.data?.message) {
-        setError(err.response.data.message);
+
+    } catch (err) {
+      const error = err as any;
+      console.error("Registration error:", error);
+
+      if (error?.response?.data?.message) {
+        setError(error.response.data.message);
       } else {
-        setError('Network error. Please check your connection and try again.');
+        setError("Network error. Please check your connection and try again.");
       }
+
     } finally {
       setLoading(false);
     }
@@ -123,7 +127,6 @@ export default function RegisterPage() {
 
   return (
     <section className="min-h-screen bg-white pt-16">
-     
 
       {/* Main Content */}
       <main className="flex flex-col items-center px-4 pt-2 pb-10">
@@ -131,8 +134,10 @@ export default function RegisterPage() {
           Register as a new user
         </h2>
         <div className="flex flex-col lg:flex-row gap-8 w-full max-w-6xl">
+          
           {/* Registration Form */}
           <form onSubmit={handleSubmit} className="flex-1 bg-white rounded-lg shadow-lg px-8 py-6">
+
             {/* Error Message */}
             {error && (
               <div className="mb-4 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-md text-sm">
@@ -147,115 +152,124 @@ export default function RegisterPage() {
                 </label>
                 <Input 
                   name="name"
-                  placeholder="Enter your name" 
+                  placeholder="Enter your name"
                   value={formData.name}
                   onChange={handleInputChange}
                   required
                   disabled={loading}
                 />
               </div>
+
               <div className="col-span-1">
                 <label className="block text-base font-medium text-gray-700 mb-1.5">
                   Lab Name*
                 </label>
                 <Input 
                   name="labName"
-                  placeholder="Lab Name" 
+                  placeholder="Lab Name"
                   value={formData.labName}
                   onChange={handleInputChange}
                   required
                   disabled={loading}
                 />
               </div>
+
               <div className="col-span-2">
                 <label className="block text-base font-medium text-gray-700 mb-1.5">
                   Accreditation No.
                 </label>
                 <Input 
                   name="accreditationNo"
-                  placeholder="Available / Not available" 
+                  placeholder="Available / Not available"
                   value={formData.accreditationNo}
                   onChange={handleInputChange}
                   disabled={loading}
                 />
               </div>
+
               <div className="col-span-1">
                 <label className="block text-base font-medium text-gray-700 mb-1.5">
                   Email*
                 </label>
                 <Input 
                   name="email"
-                  placeholder="Email" 
-                  type="email" 
+                  placeholder="Email"
+                  type="email"
                   value={formData.email}
                   onChange={handleInputChange}
                   required
                   disabled={loading}
                 />
               </div>
+
               <div className="col-span-1">
                 <label className="block text-base font-medium text-gray-700 mb-1.5">
                   Mobile no*
                 </label>
                 <Input 
                   name="mobileNo"
-                  placeholder="Mobile no" 
+                  placeholder="Mobile no"
                   value={formData.mobileNo}
                   onChange={handleInputChange}
                   required
                   disabled={loading}
                 />
               </div>
+
               <div className="col-span-1">
                 <label className="block text-base font-medium text-gray-700 mb-1.5">
                   County
                 </label>
                 <Input 
                   name="county"
-                  placeholder="Country" 
+                  placeholder="Country"
                   value={formData.county}
                   onChange={handleInputChange}
                   disabled={loading}
                 />
               </div>
+
               <div className="col-span-1">
                 <label className="block text-base font-medium text-gray-700 mb-1.5">
                   Postal / Zip Code*
                 </label>
                 <Input 
                   name="postalZipCode"
-                  placeholder="Code" 
+                  placeholder="Code"
                   value={formData.postalZipCode}
                   onChange={handleInputChange}
                   required
                   disabled={loading}
                 />
               </div>
+
               <div className="col-span-1">
                 <label className="block text-base font-medium text-gray-700 mb-1.5">
                   City
                 </label>
                 <Input 
                   name="city"
-                  placeholder="City" 
+                  placeholder="City"
                   value={formData.city}
                   onChange={handleInputChange}
                   disabled={loading}
                 />
               </div>
+
               <div className="col-span-1">
                 <label className="block text-base font-medium text-gray-700 mb-1.5">
                   Address
                 </label>
                 <Input 
                   name="address"
-                  placeholder="Address" 
+                  placeholder="Address"
                   value={formData.address}
                   onChange={handleInputChange}
                   disabled={loading}
                 />
               </div>
             </div>
+
             <Button
               type="submit"
               className="w-full mt-8 bg-[#003087] text-white text-lg font-semibold py-3 rounded-md shadow-none cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
@@ -263,6 +277,7 @@ export default function RegisterPage() {
             >
               {loading ? 'Registering...' : 'Register as a new user'}
             </Button>
+
             <p className="text-xs text-gray-700 text-center mt-4">
               For further information about how uses any personal data collected from you, please see our Privacy Notice at{" "}
               <a
@@ -275,14 +290,13 @@ export default function RegisterPage() {
               </a>
             </p>
 
-            {/* Confirmation Popup (inline modal) */}
+            {/* Confirmation Popup */}
             <div className={isConfirmOpen ? "fixed inset-0 z-50 flex items-center justify-center" : "hidden"}>
-              {/* Backdrop */}
               <div className="absolute inset-0 bg-black/40" onClick={() => setIsConfirmOpen(false)} />
-              {/* Content */}
+
               <div className="relative mx-4 w-full max-w-lg rounded-lg bg-white px-6 py-8 shadow-xl">
                 <div className="w-full flex flex-col items-center">
-                  {/* Success mark */}
+
                   <div className="flex items-center justify-center">
                     <div className="relative flex items-center justify-center">
                       <div className="h-28 w-28 rounded-full bg-green-100" />
@@ -310,17 +324,17 @@ export default function RegisterPage() {
                     <p className="text-sm leading-6 text-center">
                       We appreciate your interest in becoming a member of our platform. Your
                       application is currently under review, and we will notify you via email
-                      with your username and password once your registration is approved. If
-                      your application meets the required criteria, you will gain access to our
-                      resources and services.
+                      with your username and password once your registration is approved.
                     </p>
                     <p className="mt-3 text-sm leading-6 text-center">
                       Thank you for choosing us, and we look forward to serving you!
                     </p>
                   </div>
+
                 </div>
               </div>
             </div>
+
           </form>
 
           {/* PT Calendar Card */}
@@ -340,6 +354,7 @@ export default function RegisterPage() {
               </div>
             </div>
           </div>
+
         </div>
       </main>
     </section>
