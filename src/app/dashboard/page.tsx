@@ -6,6 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { useRouter } from "next/navigation";
+import { useState, useEffect } from "react";
 import { 
   Search, 
   Package, 
@@ -16,9 +17,25 @@ import {
   ClipboardCheck,
   CheckCircle
 } from "lucide-react";
+import { api } from "@/app/api/api";
 
 export default function Dashboard() {
   const router = useRouter();
+  const [user, setUser] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    // Get user data from localStorage (stored during login)
+    const userData = api.getUser();
+    
+    if (userData) {
+      setUser(userData);
+    } else {
+      // If no user data, redirect to login
+      router.push('/auth/login');
+    }
+    setLoading(false);
+  }, [router]);
 
   const handleYourOrdersClick = () => {
     router.push("/dashboard/your-orders");
@@ -36,6 +53,18 @@ export default function Dashboard() {
     router.push("/dashboard/survey");
   };
 
+  if (loading) {
+    return (
+      <div className="h-full bg-white flex items-center justify-center">
+        <p>Loading...</p>
+      </div>
+    );
+  }
+
+  if (!user) {
+    return null; // Will redirect to login
+  }
+
   return (
     <div className="h-full bg-white flex flex-col overflow-hidden">
       {/* Header Section */}
@@ -44,7 +73,7 @@ export default function Dashboard() {
           <div className="flex items-center space-x-6">
             <h1 className="text-3xl font-bold">
               <span className="text-gray-800">Welcome </span>
-              <span className="text-[#002A80]">MT-0121</span>
+              <span className="text-[#002A80]">{user.labCode || user.name}</span>
             </h1>
           </div>
           <div className="flex items-center space-x-4">
@@ -55,9 +84,7 @@ export default function Dashboard() {
                 className="pl-10 w-80 border-gray-300"
               />
             </div>
-            <Button className="bg-[#002A80] hover:bg-[#002A80]/90 text-white px-6" onClick={()=>{
-              router.push("/dashboard/pt-scheme")
-            }}>
+            <Button className="bg-[#002A80] hover:bg-[#002A80]/90 text-white px-6">
               All PT Scheme
             </Button>
           </div>
@@ -73,7 +100,7 @@ export default function Dashboard() {
               {/* First Row - 3 Cards */}
               <div className="grid grid-cols-3 gap-6">
                 {/* Your Orders Card */}
-                <Card className="bg-[#E6EEFF] border-0 shadow-sm cursor-pointer hover:shadow-md transition-shadow" onClick={handleYourOrdersClick}>
+                <Card className="bg-[#E6EEFF] border-0 shadow-sm cursor-pointer hover:shadow-md hover:-translate-y-1 transition-all" onClick={handleYourOrdersClick}>
                   <CardContent className="p-6">
                     <div className="flex flex-col items-center text-center space-y-4">
                       <div className="w-16 h-16 bg-[#002A80] rounded-full flex items-center justify-center">
@@ -88,7 +115,7 @@ export default function Dashboard() {
                 </Card>
 
                 {/* Result Submission Card */}
-                <Card className="bg-[#E6EEFF] border-0 shadow-sm cursor-pointer hover:shadow-md transition-shadow" onClick={handleResultSubmissionClick}>
+                <Card className="bg-[#E6EEFF] border-0 shadow-sm cursor-pointer hover:shadow-md hover:-translate-y-1 transition-all" onClick={handleResultSubmissionClick}>
                   <CardContent className="p-6">
                     <div className="flex flex-col items-center text-center space-y-4">
                       <div className="w-16 h-16 bg-[#002A80] rounded-full flex items-center justify-center">
@@ -103,7 +130,7 @@ export default function Dashboard() {
                 </Card>
 
                 {/* PT Result / Certificate Card */}
-                <Card className="bg-[#E6EEFF] border-0 shadow-sm cursor-pointer hover:shadow-md transition-shadow" onClick={handleCertificateClick}>
+                <Card className="bg-[#E6EEFF] border-0 shadow-sm cursor-pointer hover:shadow-md hover:-translate-y-1 transition-all" onClick={handleCertificateClick}>
                   <CardContent className="p-6">
                     <div className="flex flex-col items-center text-center space-y-4">
                       <div className="w-16 h-16 bg-[#002A80] rounded-full flex items-center justify-center">
@@ -121,35 +148,30 @@ export default function Dashboard() {
               {/* Second Row - 2 Cards */}
               <div className="grid grid-cols-3 gap-6">
                 {/* Download Calendar Card */}
-                <Card className="bg-[#E6EEFF] border-0 shadow-sm">
+                <Card className="bg-[#E6EEFF] border-0 shadow-sm cursor-pointer hover:shadow-md hover:-translate-y-1 transition-all">
                   <CardContent className="p-6">
                     <div className="flex flex-col items-center text-center space-y-4">
                       <div className="w-16 h-16 bg-[#002A80] rounded-full flex items-center justify-center">
                         <Calendar className="h-8 w-8 text-white" />
                       </div>
                       <div>
-                        <h3 className="text-xl font-bold text-gray-800 mb-4">Download Calender</h3>
-                        <div className="space-y-3">
-                          <Button className="w-full bg-[#002A80] hover:bg-[#002A80]/90 text-white flex items-center justify-center space-x-2">
-                            <span>PT Calender National</span>
-                            <Download className="h-4 w-4" />
-                          </Button>
-                          <Button className="w-full bg-[white]  text-[#002A80] flex items-center justify-center space-x-2">
-                            <span>PT Calender International</span>
-                            <Download className="h-4 w-4" />
-                          </Button>
-                        </div>
+                        <h3 className="text-xl font-bold text-gray-800 mb-8">Download Calender</h3>
+                        <p className="text-sm text-gray-600 mb-4 ">Download PT Calendar to view PT Schemes and Parameters</p>
+                        <Button className="w-full bg-[#002A80] hover:bg-[#002A80]/90 text-white flex items-center justify-center space-x-2">
+                          <span>PT Calender</span>
+                          <Download className="h-4 w-4" />
+                        </Button>
                       </div>
                     </div>
                   </CardContent>
                 </Card>
 
                 {/* Survey Card */}
-                <Card className="bg-[#E6EEFF] border-0 shadow-sm col-span-2">
+                <Card className="bg-[#E6EEFF] border-0 shadow-sm col-span-2 cursor-pointer hover:shadow-md hover:-translate-y-1 transition-all">
                   <CardContent className="p-6">
                     <div className="flex items-center h-full">
                       <div className="w-1/2 pr-4">
-                        <h3 className="text-xl font-bold text-gray-800 mb-3">Survey</h3>
+                        <h3 className="text-xl font-bold text-gray-800 mb-4">Survey</h3>
                         <p className="text-sm text-gray-600 mb-4 leading-relaxed">
                           We value your feedback and strive to improve our services. Please take a moment to complete our survey to help us understand your needs and enhance your experience. Thank you for your time and support!
                         </p>
@@ -192,7 +214,7 @@ export default function Dashboard() {
                       </TableRow>
                     </TableHeader>
                     <TableBody>
-                      <TableRow>
+                      <TableRow className="border-[#d9d9d9]">
                         <TableCell className="font-medium text-[10px]">
                           <div>Bakery & Confectionery Products-I</div>
                           <div className="text-gray-500">(FACH-2401)</div>
@@ -203,7 +225,7 @@ export default function Dashboard() {
                           <Badge className="bg-[#002A80] text-white hover:bg-[#002A80]">Ongoing</Badge>
                         </TableCell>
                       </TableRow>
-                      <TableRow>
+                      <TableRow className="border-[#d9d9d9]">
                         <TableCell className="font-medium text-[10px]">
                           <div>Dairy Products-II</div>
                           <div className="text-gray-500">(FACH-2402)</div>
@@ -214,7 +236,7 @@ export default function Dashboard() {
                           <Badge className="bg-orange-500 text-white hover:bg-orange-500">Upcoming</Badge>
                         </TableCell>
                       </TableRow>
-                      <TableRow>
+                      <TableRow className="border-[#d9d9d9]">
                         <TableCell className="font-medium text-[10px]">
                           <div>Spices & Condiments-III</div>
                           <div className="text-gray-500">(FACH-2403)</div>
@@ -225,7 +247,7 @@ export default function Dashboard() {
                           <Badge className="bg-orange-500 text-white hover:bg-orange-500">Upcoming</Badge>
                         </TableCell>
                       </TableRow>
-                      <TableRow>
+                      <TableRow className="border-[#d9d9d9]">
                         <TableCell className="font-medium text-[10px]">
                           <div>Cereals & Pulses-IV</div>
                           <div className="text-gray-500">(FACH-2404)</div>
