@@ -124,6 +124,3 @@ jspm_packages/
 # typescript
 *.tsbuildinfo
 next-env.d.ts
-
-# Ignore environment files
-.env
