@@ -17,7 +17,7 @@ export const api = {
   /**
    * Get stored user from localStorage
    */
-  getUser: (): any | null => {
+  getUser: (): import("@/types/user").User | null => {
     if (typeof window !== 'undefined') {
       const user = localStorage.getItem('user');
       return user ? JSON.parse(user) : null;
