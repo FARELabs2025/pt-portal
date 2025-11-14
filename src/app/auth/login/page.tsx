@@ -46,7 +46,6 @@ export default function FarelabsLogin() {
       }
     } finally {
       setLoading(false);
->>>>>>> 8d0119d0ed17103ffde5dc72af70ef94e3ac059a
     }
   };
 
