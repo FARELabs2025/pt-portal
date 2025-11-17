@@ -1,7 +1,6 @@
 "use client";
 import React, { useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
-import Image from "next/image";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 import { Card, CardContent } from "@/components/ui/card";
@@ -51,7 +50,6 @@ export default function FarelabsLogin() {
       }
     } finally {
       setLoading(false);
->>>>>>> 8d0119d0ed17103ffde5dc72af70ef94e3ac059a
     }
   };
 

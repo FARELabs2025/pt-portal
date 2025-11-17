@@ -136,7 +136,7 @@ export default function Certificate() {
       render: (_value: unknown, row: Record<string, unknown>, localIndex?: number) => (
         <Button
           size="sm"
-<<<<<<< HEAD
+ 
           onClick={() => handleDownloadResult(row as unknown as CertificateRow)}
           className="bg-white text-[#002A80] border border-[#002A80] hover:bg-[#002A80] hover:text-white flex items-center gap-2 cursor-pointer"
         >
@@ -151,7 +151,7 @@ export default function Certificate() {
       render: (_value: unknown, row: Record<string, unknown>, localIndex?: number) => (
         <Button
           size="sm"
-<<<<<<< HEAD
+
           onClick={() => handleDownloadCertificate(row as unknown as CertificateRow)}
           className="bg-white text-[#002A80] border border-[#002A80] hover:bg-[#002A80] hover:text-white flex items-center gap-2 cursor-pointer"
         >

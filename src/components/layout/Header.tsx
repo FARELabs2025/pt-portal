@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { Button } from "@/components/ui/button";
@@ -8,22 +8,26 @@ import { ShoppingCart, Bell } from "lucide-react";
 import { useEffect, useState } from "react";
 import { api } from "@/app/api/api";
 import type { User } from "@/types/user";
+import ProfileMenu from "./Profilemenu"; 
 
 export default function Header() {
   const pathname = usePathname();
   const isAuthRoute = pathname?.startsWith("/auth");
   const [user, setUser] = useState<User | null>(null);
 
+  // ADDED STATE
+  const [showMenu, setShowMenu] = useState(false);
+
   useEffect(() => {
     if (!isAuthRoute) {
       const userData = api.getUser();
-      setUser(userData);
+      
     }
   }, [isAuthRoute]);
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-white shadow-sm border-b border-gray-200">
-      <div className="  px-4 sm:px-6 lg:px-8">
+      <div className="px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Logo Section */}
           <div className="flex items-center">
@@ -40,7 +44,11 @@ export default function Header() {
           {/* Right Side Actions */}
           <div className="flex items-center space-x-4">
             {isAuthRoute ? (
-              <Button variant="outline" size="lg" className="cursor-pointer bg-[#003087] text-white border-[#003087] hover:bg-white hover:text-[#003087]">
+              <Button
+                variant="outline"
+                size="lg"
+                className="cursor-pointer bg-[#003087] text-white border-[#003087] hover:bg-white hover:text-[#003087]"
+              >
                 Contact Us
               </Button>
             ) : (
@@ -56,25 +64,37 @@ export default function Header() {
                 <Button variant="ghost" size="icon" className="relative">
                   <div className="w-10 h-10 bg-blue-50 rounded-lg flex items-center justify-center">
                     <Bell className="h-5 w-5 text-blue-600" />
-                    <Badge 
-                      className="absolute -top-1 -right-1 h-4 w-4 p-0 flex items-center justify-center text-xs bg-red-500 text-white border-0"
-                    >
+                    <Badge className="absolute -top-1 -right-1 h-4 w-4 p-0 flex items-center justify-center text-xs bg-red-500 text-white border-0">
                       1
                     </Badge>
                   </div>
                 </Button>
 
                 {/* User Profile */}
-                <div className="flex items-center space-x-2">
-                  <Avatar className="h-10 w-10">
-                    <AvatarImage src="/api/placeholder/40/40" alt="User" />
+                <div className="flex items-center space-x-2 relative">
+                  <Avatar
+                    className="cursor-pointer h-10 w-10"
+                    onClick={() => setShowMenu((prev) => !prev)} // ← ADDED
+                  >
+                    <AvatarImage
+                      src="/api/placeholder/40/40"
+                      alt="User"
+                    />
                     <AvatarFallback className="bg-gray-200 text-gray-600">
-                      {user?.labCode?.substring(0, 2) || user?.name?.substring(0, 2)?.toUpperCase() || "U"}
+                      {user?.labCode?.substring(0, 2) ||
+                        user?.name?.substring(0, 2)?.toUpperCase() ||
+                        "U"}
                     </AvatarFallback>
                   </Avatar>
+
                   <div className="hidden sm:block">
-                    <p className="text-sm font-medium text-gray-900">{user?.labCode || user?.name || "User"}</p>
+                    <p className="text-sm font-medium text-gray-900">
+                      {user?.labCode || user?.name || "User"}
+                    </p>
                   </div>
+
+                  {/* NEW MENU */}
+                  {showMenu && <ProfileMenu />}
                 </div>
               </>
             )}
