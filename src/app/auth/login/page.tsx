@@ -3,7 +3,8 @@ import React, { useState } from 'react';
 import { Eye, EyeOff } from 'lucide-react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-
+import axios from 'axios';
+import { CardContent } from '@/components/ui/card';
 // ShadCN UI Components
 type ButtonVariant = 'default' | 'outline';
 
