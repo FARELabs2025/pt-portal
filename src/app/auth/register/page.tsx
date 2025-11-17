@@ -32,7 +32,7 @@ const Button = ({
       type={type}
       onClick={onClick}
       disabled={disabled}
-      className={${baseStyles} ${variants[variant]} ${className}}
+      className={`${baseStyles} ${variants[variant]} ${className}`}
     >
       {children}
     </button>
@@ -49,7 +49,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
     return (
       <input
         type={type}
-        className={w-full px-3 py-2.5 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#003087] focus:border-transparent transition-all ${className}}
+        className={`w-full px-3 py-2.5 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#003087] focus:border-transparent transition-all ${className}`}
         ref={ref}
         {...props}
       />
