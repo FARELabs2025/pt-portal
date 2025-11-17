@@ -3,6 +3,7 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { DataTable } from "@/components/ui/data-table";
+import type { DataTableColumn } from "@/components/ui/data-table";
 import { Search, FileText } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
@@ -24,17 +25,6 @@ export default function Certificate() {
     labCode: string;
     downloadResult: string;
     downloadCertificate: string;
-  }
-
-  interface Column {
-    key: string;
-    label: string;
-    render?: (
-      value: unknown,
-      row: Record<string, unknown>,
-      localIndex?: number,
-      actualIndex?: number
-    ) => React.ReactNode;
   }
 
   // Sample data for result certificates matching the design
@@ -107,11 +97,11 @@ export default function Certificate() {
     console.log("Downloading certificate for:", row.ptScheme);
   };
 
-  const columns: Column[] = [
+  const columns: DataTableColumn<CertificateRow>[] = [
     {
       key: "ptScheme",
       label: "PT Scheme & Code",
-      render: (value: unknown) => (
+      render: (value) => (
         <span className="font-medium">
           {String(value ?? '')}
         </span>
@@ -124,7 +114,7 @@ export default function Certificate() {
     {
       key: "labCode",
       label: "Lab Code",
-      render: (value: unknown) => (
+      render: (value) => (
         <span className="font-medium">
           {String(value ?? '')}
         </span>
@@ -133,10 +123,10 @@ export default function Certificate() {
     {
       key: "downloadResult",
       label: "Download Result",
-      render: (_value: unknown, row: Record<string, unknown>, localIndex?: number) => (
+      render: (_value, row) => (
         <Button
           size="sm"
-          onClick={() => handleDownloadResult(row as unknown as CertificateRow)}
+          onClick={() => handleDownloadResult(row)}
           className="bg-white text-[#002A80] border border-[#002A80] hover:bg-[#002A80] hover:text-white flex items-center gap-2 cursor-pointer"
         >
           <FileText className="h-4 w-4" />
@@ -147,10 +137,10 @@ export default function Certificate() {
     {
       key: "downloadCertificate",
       label: "Download Certificate",
-      render: (_value: unknown, row: Record<string, unknown>, localIndex?: number) => (
+      render: (_value, row) => (
         <Button
           size="sm"
-          onClick={() => handleDownloadCertificate(row as unknown as CertificateRow)}
+          onClick={() => handleDownloadCertificate(row)}
           className="bg-white text-[#002A80] border border-[#002A80] hover:bg-[#002A80] hover:text-white flex items-center gap-2 cursor-pointer"
         >
           <FileText className="h-4 w-4" />
@@ -205,7 +195,7 @@ export default function Certificate() {
         <div className="h-full overflow-hidden">
           <DataTable
             columns={columns}
-            data={certificatesData as unknown as Record<string, unknown>[]}
+            data={certificatesData}
             searchable={false}
             pagination={true}
             itemsPerPage={7}

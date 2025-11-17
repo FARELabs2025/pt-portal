@@ -5,15 +5,20 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft, ChevronRight, Search } from "lucide-react";
 
-interface Column {
-  key: string;
+export interface DataTableColumn<T extends object> {
+  key: keyof T;
   label: string;
-  render?: (value: unknown, row: Record<string, unknown>, localIndex?: number, actualIndex?: number) => React.ReactNode;
+  render?: (
+    value: T[keyof T],
+    row: T,
+    localIndex?: number,
+    actualIndex?: number
+  ) => React.ReactNode;
 }
 
-interface DataTableProps {
-  columns: Column[];
-  data: Record<string, unknown>[];
+export interface DataTableProps<T extends object> {
+  columns: DataTableColumn<T>[];
+  data: T[];
   searchable?: boolean;
   pagination?: boolean;
   searchPlaceholder?: string;
@@ -22,16 +27,16 @@ interface DataTableProps {
   backButton?: React.ReactNode;
 }
 
-export function DataTable({
-  columns = [],
-  data = [],
+export function DataTable<T extends object>({
+  columns = [] as DataTableColumn<T>[],
+  data = [] as T[],
   searchable = true,
   pagination = true,
   searchPlaceholder = "Search...",
   itemsPerPage = 10,
   className = "",
   backButton,
-}: DataTableProps) {
+}: DataTableProps<T>) {
   const [searchTerm, setSearchTerm] = React.useState("");
   const [currentPage, setCurrentPage] = React.useState(1);
 
@@ -41,7 +46,7 @@ export function DataTable({
     
     return data.filter((row) =>
       columns.some((column) => {
-        const value = (row as Record<string, unknown>)[column.key];
+        const value = row[column.key];
         return String(value).toLowerCase().includes(searchTerm.toLowerCase());
       })
     );
@@ -53,7 +58,7 @@ export function DataTable({
   
     const startIndex = (currentPage - 1) * itemsPerPage;
     const endIndex = startIndex + itemsPerPage;
-    return (filteredData as Record<string, unknown>[]).slice(startIndex, endIndex);
+    return filteredData.slice(startIndex, endIndex);
   }, [filteredData, currentPage, itemsPerPage, pagination]);
 
   const totalPages = Math.ceil(filteredData.length / itemsPerPage);
@@ -86,7 +91,7 @@ export function DataTable({
             <tr>
               {columns.map((column) => (
                 <th
-                  key={column.key}
+                  key={String(column.key)}
                   className="px-6 py-3 text-left text-xs font-bold text-gray-800 uppercase tracking-wider"
                 >
                   {column.label}
@@ -102,7 +107,9 @@ export function DataTable({
                 <tr key={index} className="hover:bg-gray-50">
                   {columns.map((column) => (
                     <td key={String(column.key)} className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                      {column.render ? column.render((row as Record<string, unknown>)[column.key] ?? '', row as Record<string, unknown>, localIndex, actualIndex) : String((row as Record<string, unknown>)[column.key] ?? '')}
+                      {column.render
+                        ? column.render(row[column.key], row, localIndex, actualIndex)
+                        : String(row[column.key] ?? "")}
                     </td>
                   ))}
                 </tr>
