@@ -7,11 +7,12 @@ import { Badge } from "@/components/ui/badge";
 import { ShoppingCart, Bell } from "lucide-react";
 import { useEffect, useState } from "react";
 import { api } from "@/app/api/api";
+import type { User } from "@/types/user";
 
 export default function Header() {
   const pathname = usePathname();
   const isAuthRoute = pathname?.startsWith("/auth");
-  const [user, setUser] = useState<any>(null);
+  const [user, setUser] = useState<User | null>(null);
 
   useEffect(() => {
     if (!isAuthRoute) {

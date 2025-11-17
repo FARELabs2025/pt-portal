@@ -85,10 +85,15 @@ export default function FarelabsLogin() {
         // Show error message
         setError(data.message || 'Login failed. Please try again.');
       }
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error('Login error:', err);
-      if (err.response?.data?.message) {
-        setError(err.response.data.message);
+      if (typeof err === 'object' && err !== null && 'response' in err) {
+        const axiosErr = err as { response?: { data?: { message?: string } } };
+        if (axiosErr.response?.data?.message) {
+          setError(axiosErr.response.data.message);
+        } else {
+          setError('Network error. Please check your connection and try again.');
+        }
       } else {
         setError('Network error. Please check your connection and try again.');
       }

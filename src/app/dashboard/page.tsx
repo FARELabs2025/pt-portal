@@ -18,10 +18,11 @@ import {
   CheckCircle
 } from "lucide-react";
 import { api } from "@/app/api/api";
+import type { User } from "@/types/user";
 
 export default function Dashboard() {
   const router = useRouter();
-  const [user, setUser] = useState<any>(null);
+  const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
