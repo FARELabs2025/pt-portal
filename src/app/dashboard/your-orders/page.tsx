@@ -7,10 +7,11 @@ import { Search } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import { api } from "@/app/api/api";
+import type { User } from "@/types/user";
 
 export default function YourOrders() {
   const router = useRouter();
-  const [user, setUser] = useState<any>(null);
+  const [user, setUser] = useState<User | null>(null);
 
   useEffect(() => {
     const userData = api.getUser();

@@ -8,10 +8,11 @@ import { useRef, useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { api } from "@/app/api/api";
 import axios from "axios";
+import type { User } from "@/types/user";
 
 export default function ResultSubmission() {
   const router = useRouter();
-  const [user, setUser] = useState<any>(null);
+  const [user, setUser] = useState<User | null>(null);
 
   useEffect(() => {
     const userData = api.getUser();

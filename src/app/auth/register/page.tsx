@@ -114,12 +114,18 @@ export default function RegisterPage() {
       } else {
         setError(data.message || "Registration failed. Please try again.");
       }
-    } catch (err: any) {
-      console.error(err);
-      setError(
-        err?.response?.data?.message ??
-          "Network error. Please check connection and try again."
-      );
+    } catch (err: unknown) {
+      console.error('Registration error:', err);
+      if (typeof err === 'object' && err !== null && 'response' in err) {
+        const axiosErr = err as { response?: { data?: { message?: string } } };
+        if (axiosErr.response?.data?.message) {
+          setError(axiosErr.response.data.message);
+        } else {
+          setError('Network error. Please check your connection and try again.');
+        }
+      } else {
+        setError('Network error. Please check your connection and try again.');
+      }
     } finally {
       setLoading(false);
     }
