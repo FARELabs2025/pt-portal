@@ -290,7 +290,10 @@ export default function YourOrders() {
                 className="pl-10 w-80 border-gray-300"
               />
             </div>
-            <Button className="bg-[#002A80] hover:bg-[#002A80]/90 text-white px-6">
+            <Button
+              className="bg-[#002A80] hover:bg-[#002A80]/90 text-white px-6"
+              onClick={() => router.push("/dashboard/pt-scheme")}
+            >
               All PT Scheme
             </Button>
           </div>
