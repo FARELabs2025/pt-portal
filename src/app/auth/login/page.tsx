@@ -1,74 +1,27 @@
-"use client"
-import React, { useState } from 'react';
-import { Eye, EyeOff } from 'lucide-react';
-import Image from 'next/image';
-import { useRouter } from 'next/navigation';
-import axios from 'axios';
-import { CardContent } from '@/components/ui/card';
-// ShadCN UI Components
-type ButtonVariant = 'default' | 'outline';
+"use client";
+import React, { useState } from "react";
+import { Eye, EyeOff } from "lucide-react";
+import { useRouter } from "next/navigation";
+import axios from "axios";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Card, CardContent } from "@/components/ui/card";
 
-const Button = ({ children, variant = 'default', className = '', onClick, type = 'button', disabled = false }: { children: React.ReactNode; variant?: ButtonVariant; className?: string; onClick?: () => void; type?: 'button' | 'submit' | 'reset'; disabled?: boolean; }) => {
-  const baseStyles = 'px-4 py-2 rounded-md font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2';
-  const variants = {
-    default: 'bg-[#003087] text-white hover:bg-[#002166] focus:ring-[#003087]',
-    outline: 'border-2 border-[#003087] text-[#003087] hover:bg-[#003087] hover:text-white focus:ring-[#003087]',
-  };
-  return (
-    <button type={type} onClick={onClick} disabled={disabled} className={`${baseStyles} ${variants[variant]} ${className}`}>
-      {children}
-    </button>
-  );
-};
-
-interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
-  className?: string;
-  type?: string;
-}
-
-const Input = React.forwardRef<HTMLInputElement, InputProps>(({ className = '', type = 'text', ...props }, ref) => {
-  return (
-    <input
-      type={type}
-      className={`w-full px-3 py-2.5 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#003087] focus:border-transparent transition-all ${className}`}
-      ref={ref}
-      {...props}
-    />
-  );
-});
-
-Input.displayName = 'Input';
-
-interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
-  className?: string;
-  children?: React.ReactNode;
-}
-
-const Card = ({ children, className = '', ...props }: CardProps) => {
-  return (
-    <div className={`bg-white rounded-lg shadow-lg ${className}`} {...props}>
-      {children}
-    </div>
-  );
-};
-
-// Main Login Component
 export default function FarelabsLogin() {
   const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setError('');
+    setError("");
     setLoading(true);
 
     try {
-      // Call login API
-      const response = await axios.post('/api/auth/login', {
+      const response = await axios.post("/api/auth/login", {
         username,
         password,
       });
@@ -76,55 +29,55 @@ export default function FarelabsLogin() {
       const data = response.data;
 
       if (data.success) {
-        // Store token and user data
-        localStorage.setItem('token', data.data.token);
-        localStorage.setItem('user', JSON.stringify(data.data.user));
-        
-        // Redirect to dashboard
-        router.push('/dashboard');
+        localStorage.setItem("token", data.data.token);
+        localStorage.setItem("user", JSON.stringify(data.data.user));
+        router.push("/dashboard");
       } else {
-        // Show error message
-        setError(data.message || 'Login failed. Please try again.');
+        setError(data.message || "Login failed. Please try again.");
       }
     } catch (err: unknown) {
-      console.error('Login error:', err);
-      if (typeof err === 'object' && err !== null && 'response' in err) {
-        const axiosErr = err as { response?: { data?: { message?: string } } };
-        if (axiosErr.response?.data?.message) {
-          setError(axiosErr.response.data.message);
-        } else {
-          setError('Network error. Please check your connection and try again.');
-        }
-      } else {
-        setError('Network error. Please check your connection and try again.');
-      }
+      console.error("Login error:", err);
+      setError("Network error. Please check your connection and try again.");
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen w-full relative overflow-hidden flex flex-col">
-      {/* Background */}
-      <div
-        className="absolute inset-0 bg-cover bg-center"
-        style={{
-          backgroundImage:
-            'url("https://images.unsplash.com/photo-1532187863486-abf9dbad1b69?w=1920&q=80")',
-        }}
-      >
-        <div className="absolute inset-0 bg-white/40 backdrop-blur-[2px]"></div>
-      </div>
+  <div className="fixed inset-0 w-full h-full overflow-hidden">
+    {/* Background */}
+    <div
+      className="absolute inset-0 bg-cover bg-center"
+      style={{
+        backgroundImage:
+          'url("https://images.unsplash.com/photo-1532187863486-abf9dbad1b69?w=1920&q=80")',
+      }}
+    >
+      <div className="absolute inset-0 bg-white/40 backdrop-blur-[2px]" />
+    </div>
 
-      <div className="relative z-10 flex-1 flex items-center justify-center overflow-hidden">
-        <Card className="w-full max-w-md bg-white mb-15">
-          <CardContent>
-            {/* Login Header */}
-            <div className="">
-              <h2 className="text-2xl font-bold text-gray-900 text-center mb-1">
+    {/* Centered card */}
+    <div className="relative z-10 flex h-full items-center justify-center px-4 sm:px-6">
+      <div className="w-[90%] sm:w-[70%] md:w-[55%] lg:w-[45%] xl:w-[35%]">
+        <Card
+          className="
+            w-full
+            bg-white/80
+            backdrop-blur-xl
+            shadow-xl
+            rounded-4xl
+            border border-white/40
+            max-h-[90vh]        /* keep card height within screen */
+            overflow-hidden     /* REMOVE scroll entirely */
+          "
+        >
+          <CardContent className="p-8 sm:p-10 space-y-6">
+            {/* Header */}
+            <div>
+              <h2 className="text-3xl font-bold text-gray-900 text-center mb-2">
                 Login
               </h2>
-              <p className="text-gray-600 text-center text-sm">
+              <p className="text-gray-600 text-center text-base">
                 Nice to see you again!
               </p>
             </div>
@@ -149,49 +102,53 @@ export default function FarelabsLogin() {
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
                   required
-                  className="text-black"
+                  className="text-black h-11 border-[#d2d2d2]"
                   disabled={loading}
                 />
               </div>
 
-            {/* Password Input */}
-            <div>
-              <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1.5">
-                Password
-              </label>
-              <div className="relative">
-                <Input
-                  id="password"
-                  type={showPassword ? 'text' : 'password'}
-                  placeholder="Password"
-                  value={password}
-                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPassword(e.target.value)}
-                  className="pr-10"
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
+              {/* Password */}
+              <div>
+                <label
+                  htmlFor="password"
+                  className="block text-sm font-medium text-gray-700 mb-1.5"
                 >
-                  {showPassword ? (
-                    <EyeOff className="cursor-pointer w-5 h-5" />
-                  ) : (
-                    <Eye className="cursor-pointer w-5 h-5" />
-                  )}
-                </button>
+                  Password
+                </label>
+                <div className="relative">
+                  <Input
+                    id="password"
+                    type={showPassword ? "text" : "password"}
+                    placeholder="Password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    className="pr-10 h-11 border-[#d2d2d2]"
+                    disabled={loading}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 p-1 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-[#003087]"
+                  >
+                    {showPassword ? (
+                      <EyeOff className="w-5 h-5 text-gray-500" />
+                    ) : (
+                      <Eye className="w-5 h-5 text-gray-500" />
+                    )}
+                  </button>
+                </div>
               </div>
-            </div>
 
-            {/* Submit Button */}
-            <Button 
-              type="submit" 
-              className="cursor-pointer w-full py-2.5 text-base font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
-              disabled={loading}
-            >
-              {loading ? 'Logging in...' : 'Submit'}
-            </Button>
+              {/* Submit */}
+              <Button
+                type="submit"
+                className="w-full py-2.5 text-white font-semibold disabled:opacity-50 disabled:cursor-not-allowed bg-[#002A80]"
+                disabled={loading}
+              >
+                {loading ? "Logging in..." : "Submit"}
+              </Button>
 
-              {/* Forgot Password */}
+              {/* Forgot password */}
               <div className="text-center">
                 <a
                   href="#"
@@ -203,14 +160,14 @@ export default function FarelabsLogin() {
             </form>
 
             {/* Divider */}
-            <div className="my-2 border-t border-gray-200"></div>
+            <div className="border-t border-gray-200" />
 
             {/* Register */}
-            <div className="text-center">
-              <h3 className="text-lg font-bold text-gray-900 mb-3">
+            <div className="text-center space-y-2">
+              <h3 className="text-lg font-bold text-gray-900">
                 New customer
               </h3>
-              <p className="text-gray-600 text-sm mb-1">
+              <p className="text-gray-600 text-sm">
                 Email us at{" "}
                 <a
                   href="mailto:ptprovider@farelabs.com"
@@ -219,12 +176,12 @@ export default function FarelabsLogin() {
                   ptprovider@farelabs.com
                 </a>
               </p>
-              <p className="text-gray-600 text-sm mb-4">
+              <p className="text-gray-600 text-sm">
                 and we will set up a new account for you
               </p>
 
               <Button
-                className="px-8 py-2 bg-[#003087]"
+                className="mt-2 w-full sm:w-auto px-8 py-2 bg-[#002A80] text-white font-bold"
                 onClick={() => router.push("/auth/register")}
               >
                 Register Now
@@ -234,5 +191,6 @@ export default function FarelabsLogin() {
         </Card>
       </div>
     </div>
-  );
+  </div>
+);
 }
