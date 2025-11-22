@@ -61,7 +61,7 @@ export default function Survey() {
     const hasRating = selectedRating > 0;
     
     return (
-      <div className="flex items-center gap-[10px] flex-nowrap">
+      <div className="flex items-center gap-2.5 flex-nowrap">
         {[1, 2, 3, 4, 5].map((num) => {
           // After clicking, show yellow stars instead of numbers (like Packaging question)
           if (hasRating) {
@@ -71,7 +71,7 @@ export default function Survey() {
                 key={num}
                 type="button"
                 onClick={() => handleRatingClick(questionId, num)}
-                className="flex items-center justify-center w-[106px] h-11 rounded-lg border border-[#D2D2D2] px-[10px] py-[10px] transition-all shadow-[0_2px_1px_0_rgba(0,0,0,0.1)] bg-white shrink-0"
+                className="flex items-center justify-center w-[106px] h-11 rounded-lg border border-[#D2D2D2] px-2.5 py-2.5 transition-all shadow-[0_2px_1px_0_rgba(0,0,0,0.1)] bg-white shrink-0"
               >
                 <Star
                   className={`w-6 h-6 ${
@@ -92,7 +92,7 @@ export default function Survey() {
               key={num}
               type="button"
               onClick={() => handleRatingClick(questionId, num)}
-              className={`flex items-center justify-center w-[106px] h-11 rounded-lg border px-[10px] py-[10px] transition-all text-sm font-semibold shadow-[0_2px_1px_0_rgba(0,0,0,0.1)] shrink-0 ${
+              className={`flex items-center justify-center w-[106px] h-11 rounded-lg border px-2.5 py-2.5 transition-all text-sm font-semibold shadow-[0_2px_1px_0_rgba(0,0,0,0.1)] shrink-0 ${
                 isSelected
                   ? questionId === 1
                     ? "bg-[#FFD700] border-[#FFD700] text-white"

@@ -7,12 +7,12 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Badge } from "@/components/ui/badge";
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
-import { 
-  Search, 
-  Package, 
-  Upload, 
-  FileText, 
-  Calendar, 
+import {
+  Search,
+  Package,
+  Upload,
+  FileText,
+  Calendar,
   Download,
   ClipboardCheck,
   CheckCircle
@@ -28,7 +28,7 @@ export default function Dashboard() {
   useEffect(() => {
     // Get user data from localStorage (stored during login)
     const userData = api.getUser();
-    
+
     if (userData) {
       setUser(userData);
     } else {
@@ -67,7 +67,7 @@ export default function Dashboard() {
   }
 
   return (
-    <div className="h-full bg-white flex flex-col overflow-hidden">
+    <div className="min-h-screen bg-white flex flex-col">
       {/* Header Section */}
       <div className="bg-white px-6 py-4">
         <div className="flex items-center justify-between">
@@ -80,12 +80,12 @@ export default function Dashboard() {
           <div className="flex items-center space-x-4">
             <div className="relative">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
-              <Input 
-                placeholder="Search here..." 
+              <Input
+                placeholder="Search here..."
                 className="pl-10 w-80 border-gray-300"
               />
             </div>
-            <Button className="bg-[#002A80] hover:bg-[#002A80]/90 text-white px-6">
+            <Button className="bg-[#002A80] hover:bg-[#002A80]/90 text-white px-6" onClick={() => router.push("/dashboard/pt-scheme")}>
               All PT Scheme
             </Button>
           </div>
@@ -93,11 +93,11 @@ export default function Dashboard() {
       </div>
 
       {/* Main Content */}
-      <div className="flex-1 p-6 overflow-hidden">
+      <div className="flex-1 p-6 overflow-auto">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
           {/* Left Column - Cards */}
           <div className="lg:col-span-8">
-            <div className="space-y-6 h-full overflow-y-auto">
+            <div className="space-y-6 overflow-y-auto max-h-[calc(100vh-8rem)]">
               {/* First Row - 3 Cards */}
               <div className="grid grid-cols-3 gap-6">
                 {/* Your Orders Card */}
@@ -176,7 +176,7 @@ export default function Dashboard() {
                         <p className="text-sm text-gray-600 mb-4 leading-relaxed">
                           We value your feedback and strive to improve our services. Please take a moment to complete our survey to help us understand your needs and enhance your experience. Thank you for your time and support!
                         </p>
-                        <Button 
+                        <Button
                           onClick={handleSurveyClick}
                           className="bg-[#002A80] hover:bg-[#002A80]/90 text-white"
                         >
@@ -184,11 +184,11 @@ export default function Dashboard() {
                         </Button>
                       </div>
                       <div className="w-1/2 flex justify-center items-center">
-                    <img
-                      src="/images/survey.png"
-                      alt="Survey Illustration"
-                      className="w-full h-auto max-w-[200px] object-contain"
-                    />
+                        <img
+                          src="/images/survey.png"
+                          alt="Survey Illustration"
+                          className="w-full h-auto max-w-[200px] object-contain"
+                        />
                       </div>
                     </div>
                   </CardContent>
@@ -200,12 +200,12 @@ export default function Dashboard() {
           {/* Right Column - PT Table */}
           <div className="lg:col-span-4">
             <div className="h-full">
-              <Card className="bg-[#E6EEFF] border-0 shadow-sm h-full flex flex-col">
+              <Card className="bg-[#E6EEFF] border-0 shadow-sm flex flex-col h-full">
                 <div className="px-4 pb-1">
                   <h2 className="text-2xl font-bold text-gray-800">Ongoing/Upcoming PT</h2>
                 </div>
-                <div className="flex-1 overflow-hidden">
-                  <Table className="h-full">
+                <div className="flex-1 overflow-auto">
+                  <Table>
                     <TableHeader>
                       <TableRow className="bg-[#002A80] hover:bg-[#002A80]">
                         <TableHead className="text-white font-semibold text-[10px]">PT Scheme & Code</TableHead>

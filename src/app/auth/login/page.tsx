@@ -3,9 +3,9 @@ import React, { useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
-import { Card, CardContent } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Card, CardContent } from "@/components/ui/card";
 
 export default function FarelabsLogin() {
   const router = useRouter();
@@ -31,50 +31,53 @@ export default function FarelabsLogin() {
       if (data.success) {
         localStorage.setItem("token", data.data.token);
         localStorage.setItem("user", JSON.stringify(data.data.user));
-
         router.push("/dashboard");
       } else {
         setError(data.message || "Login failed. Please try again.");
       }
     } catch (err: unknown) {
-      console.error('Login error:', err);
-      if (typeof err === 'object' && err !== null && 'response' in err) {
-        const axiosErr = err as { response?: { data?: { message?: string } } };
-        if (axiosErr.response?.data?.message) {
-          setError(axiosErr.response.data.message);
-        } else {
-          setError('Network error. Please check your connection and try again.');
-        }
-      } else {
-        setError("Network error. Please check your connection and try again.");
-      }
+      console.error("Login error:", err);
+      setError("Network error. Please check your connection and try again.");
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen w-full relative overflow-hidden flex flex-col">
-      {/* Background */}
-      <div
-        className="absolute inset-0 bg-cover bg-center"
-        style={{
-          backgroundImage:
-            'url("https://images.unsplash.com/photo-1532187863486-abf9dbad1b69?w=1920&q=80")',
-        }}
-      >
-        <div className="absolute inset-0 bg-white/40 backdrop-blur-[2px]"></div>
-      </div>
+  <div className="fixed inset-0 w-full h-full overflow-hidden">
+    {/* Background */}
+    <div
+      className="absolute inset-0 bg-cover bg-center"
+      style={{
+        backgroundImage:
+          'url("https://images.unsplash.com/photo-1532187863486-abf9dbad1b69?w=1920&q=80")',
+      }}
+    >
+      <div className="absolute inset-0 bg-white/40 backdrop-blur-[2px]" />
+    </div>
 
-      <div className="relative z-10 flex-1 flex items-center justify-center overflow-hidden">
-        <Card className="w-full max-w-md bg-white mb-15">
-          <CardContent>
-            {/* Login Header */}
-            <div className="">
-              <h2 className="text-2xl font-bold text-gray-900 text-center mb-1">
+    {/* Centered card */}
+    <div className="relative z-10 flex h-full items-center justify-center px-4 sm:px-6">
+      <div className="w-[90%] sm:w-[70%] md:w-[55%] lg:w-[45%] xl:w-[35%]">
+        <Card
+          className="
+            w-full
+            bg-white/80
+            backdrop-blur-xl
+            shadow-xl
+            rounded-4xl
+            border border-white/40
+            max-h-[90vh]        /* keep card height within screen */
+            overflow-hidden     /* REMOVE scroll entirely */
+          "
+        >
+          <CardContent className="p-8 sm:p-10 space-y-6">
+            {/* Header */}
+            <div>
+              <h2 className="text-3xl font-bold text-gray-900 text-center mb-2">
                 Login
               </h2>
-              <p className="text-gray-600 text-center text-sm">
+              <p className="text-gray-600 text-center text-base">
                 Nice to see you again!
               </p>
             </div>
@@ -99,14 +102,17 @@ export default function FarelabsLogin() {
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
                   required
-                  className="text-black"
+                  className="text-black h-11 border-[#d2d2d2]"
                   disabled={loading}
                 />
               </div>
 
               {/* Password */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1.5">
+                <label
+                  htmlFor="password"
+                  className="block text-sm font-medium text-gray-700 mb-1.5"
+                >
                   Password
                 </label>
                 <div className="relative">
@@ -116,36 +122,33 @@ export default function FarelabsLogin() {
                     placeholder="Password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="pr-10 text-black"
-                    required
+                    className="pr-10 h-11 border-[#d2d2d2]"
                     disabled={loading}
                   />
-                  <Button
+                  <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
-                    disabled={loading}
-                    variant="default"
+                    className="absolute right-3 top-1/2 -translate-y-1/2 p-1 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-[#003087]"
                   >
                     {showPassword ? (
-                      <EyeOff className="cursor-pointer w-5 h-5" />
+                      <EyeOff className="w-5 h-5 text-gray-500" />
                     ) : (
-                      <Eye className="cursor-pointer w-5 h-5" />
+                      <Eye className="w-5 h-5 text-gray-500" />
                     )}
-                  </Button>
+                  </button>
                 </div>
               </div>
 
-              {/* Login Button */}
+              {/* Submit */}
               <Button
                 type="submit"
-                className="w-full text-base font-semibold bg-[#003087]"
+                className="w-full py-2.5 text-white font-semibold disabled:opacity-50 disabled:cursor-not-allowed bg-[#002A80]"
                 disabled={loading}
               >
                 {loading ? "Logging in..." : "Submit"}
               </Button>
 
-              {/* Forgot Password */}
+              {/* Forgot password */}
               <div className="text-center">
                 <a
                   href="#"
@@ -157,14 +160,14 @@ export default function FarelabsLogin() {
             </form>
 
             {/* Divider */}
-            <div className="my-2 border-t border-gray-200"></div>
+            <div className="border-t border-gray-200" />
 
             {/* Register */}
-            <div className="text-center">
-              <h3 className="text-lg font-bold text-gray-900 mb-3">
+            <div className="text-center space-y-2">
+              <h3 className="text-lg font-bold text-gray-900">
                 New customer
               </h3>
-              <p className="text-gray-600 text-sm mb-1">
+              <p className="text-gray-600 text-sm">
                 Email us at{" "}
                 <a
                   href="mailto:ptprovider@farelabs.com"
@@ -173,12 +176,12 @@ export default function FarelabsLogin() {
                   ptprovider@farelabs.com
                 </a>
               </p>
-              <p className="text-gray-600 text-sm mb-4">
+              <p className="text-gray-600 text-sm">
                 and we will set up a new account for you
               </p>
 
               <Button
-                className="px-8 py-2 bg-[#003087]"
+                className="mt-2 w-full sm:w-auto px-8 py-2 bg-[#002A80] text-white font-bold"
                 onClick={() => router.push("/auth/register")}
               >
                 Register Now
@@ -188,5 +191,6 @@ export default function FarelabsLogin() {
         </Card>
       </div>
     </div>
-  );
+  </div>
+);
 }
